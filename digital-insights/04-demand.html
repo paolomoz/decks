@@ -3,58 +3,74 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>05 · Demand · Digital Insights</title>
+<title>05 · Adoption · Digital Insights</title>
 <link rel="stylesheet" href="assets/styles.css">
 <style>
   body { background: linear-gradient(180deg, #060A14 0%, #0a0f24 55%, #160c2c 100%); }
 
-  .demand-grid {
-    display: grid; grid-template-columns: repeat(3, 1fr);
-    gap: 1.8rem; margin-top: 1.4rem;
-    flex: 1; min-height: 0; align-items: stretch;
-  }
-  .stat-card {
-    padding: 1.6rem 1.8rem;
-    border-left: 4px solid var(--cyan);
-    background: rgba(95, 212, 255, 0.06);
-    border-radius: 0 8px 8px 0;
+  .slide-title { font-size: clamp(2.4rem, 4.8vw, 3.8rem); margin-bottom: 0.4rem; }
+  .slide-sub { font-size: clamp(1rem, 1.3vw, 1.3rem); margin-bottom: 0.8rem; }
+
+  /* ── chart card ── */
+  .chart-card {
+    flex: 1; min-height: 0;
+    padding: 1.4rem 1.6rem 1rem;
+    border: 1px solid rgba(95, 212, 255, 0.22);
+    background: rgba(6, 10, 20, 0.55);
+    border-radius: 10px;
     backdrop-filter: blur(6px);
-    display: flex; flex-direction: column; justify-content: center;
+    display: flex; flex-direction: column;
+    position: relative; overflow: hidden;
   }
-  .stat-card.violet { border-left-color: var(--violet); background: rgba(192, 132, 252, 0.06); }
-  .stat-card.bright { border-left-color: var(--cyan-bright); background: rgba(170, 233, 255, 0.06); }
-  .stat-num {
-    font-family: 'Inter', sans-serif;
-    font-weight: 200; font-size: clamp(5.5rem, 10vw, 9rem);
-    line-height: 0.92; letter-spacing: -0.06em;
-    color: var(--cyan);
+  .chart-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--cyan), var(--violet));
   }
-  .stat-card.violet .stat-num { color: var(--violet); }
-  .stat-card.bright .stat-num { color: var(--cyan-bright); }
-  .stat-num .arrow { font-weight: 300; color: var(--dust-faint); margin: 0 0.05em; }
-  .stat-lbl {
-    font-family: 'Inter', sans-serif;
-    font-size: clamp(1.2rem, 1.5vw, 1.5rem);
-    font-weight: 600; color: var(--dust);
-    margin-top: 0.5rem;
+  .chart-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin-bottom: 0.4rem;
   }
-  .stat-cap {
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
-    font-size: clamp(1rem, 1.2vw, 1.15rem);
-    color: var(--dust-faint); margin-top: 0.3rem;
-    line-height: 1.4;
+  .chart-title {
+    font-family: 'Inter', sans-serif; font-weight: 800;
+    font-size: clamp(1.05rem, 1.4vw, 1.3rem);
+    color: var(--dust); letter-spacing: -0.01em;
+  }
+  .chart-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--dust-faint);
+  }
+  .chart-svg-wrap { flex: 1; min-height: 0; position: relative; }
+  .chart-svg-wrap svg { width: 100%; height: 100%; display: block; }
+
+  .chart-strip {
+    display: flex; gap: 1.2rem; justify-content: space-around;
+    margin-top: 0.6rem;
+    padding-top: 0.7rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .strip-item { text-align: center; flex: 1; }
+  .strip-num {
+    font-family: 'Inter', sans-serif; font-weight: 700;
+    font-size: clamp(1.1rem, 1.5vw, 1.4rem);
+    color: var(--cyan); letter-spacing: -0.02em;
+  }
+  .strip-item.violet .strip-num { color: var(--violet); }
+  .strip-lbl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--dust-faint); margin-top: 0.15rem;
   }
 
   .demand-strip {
-    margin-top: 1.6rem;
-    padding: 1rem 1.4rem;
+    margin-top: 0.8rem; flex-shrink: 0;
+    padding: 0.8rem 1.4rem;
     border: 1px solid rgba(192, 132, 252, 0.22);
     background: rgba(6, 10, 20, 0.6);
     border-radius: 5px;
     font-family: 'Cormorant Garamond', serif;
     font-style: italic;
-    font-size: clamp(1.3rem, 1.8vw, 1.65rem);
+    font-size: clamp(1.1rem, 1.5vw, 1.4rem);
     color: var(--dust-dim);
     text-align: center;
     line-height: 1.4;
@@ -89,41 +105,51 @@
   <a href="01b-report.html" data-label="2. The report"></a>
   <a href="02-signals.html" data-label="3. Deal signals"></a>
   <a href="03-summit.html" data-label="4. Summit"></a>
-  <a href="04-demand.html" class="current" data-label="5. Demand"></a>
+  <a href="04-demand.html" class="current" data-label="5. Adoption"></a>
   <a href="05-roadmap.html" data-label="6. Roadmap"></a>
 </aside>
 
 <main>
   <section class="slide">
     <div class="slide-inner">
-      <div class="eyebrow reveal">05 · ADOPTION & DEMAND</div>
+      <div class="eyebrow reveal">05 · ADOPTION GROWTH</div>
       <h1 class="slide-title reveal reveal-1">
-        Not just a sales tool<br>
-        <span class="accent-violet serif">anymore.</span>
+        Adoption is <span class="serif">compounding —</span><br>
+        300× in 11 months.
       </h1>
       <p class="slide-sub reveal reveal-2">
-        BDRs are reusing it. CSMEs are asking for it. The field pulled it in.
+        From 10 reports a month to ~3,000 — pulled in by the field.
       </p>
 
-      <div class="demand-grid">
-        <div class="stat-card reveal reveal-3">
-          <div class="stat-num">~3,000</div>
-          <div class="stat-lbl">reports generated</div>
-          <div class="stat-cap">across all teams &amp; regions</div>
+      <div class="chart-card reveal reveal-3">
+        <div class="chart-head">
+          <div class="chart-title">Monthly reports generated</div>
+          <div class="chart-meta">Jun 2025 → May 2026</div>
         </div>
-        <div class="stat-card violet reveal reveal-4">
-          <div class="stat-num">3<span class="arrow">→</span>4</div>
-          <div class="stat-lbl">regions live</div>
-          <div class="stat-cap">US · EMEA · JAPAC → +UAE</div>
+        <div class="chart-svg-wrap">
+          <svg id="growthChart" viewBox="0 0 1200 460" preserveAspectRatio="none" aria-hidden="true"></svg>
         </div>
-        <div class="stat-card bright reveal reveal-5">
-          <div class="stat-num">~1,600</div>
-          <div class="stat-lbl">Summit reports reused by BDRs</div>
-          <div class="stat-cap">USA + Australia post-Summit outreach</div>
+        <div class="chart-strip">
+          <div class="strip-item">
+            <div class="strip-num">10</div>
+            <div class="strip-lbl">Jun 2025</div>
+          </div>
+          <div class="strip-item">
+            <div class="strip-num">185</div>
+            <div class="strip-lbl">Dec 2025</div>
+          </div>
+          <div class="strip-item violet">
+            <div class="strip-num">600</div>
+            <div class="strip-lbl">Feb 2026</div>
+          </div>
+          <div class="strip-item violet">
+            <div class="strip-num">~3,000</div>
+            <div class="strip-lbl">May 2026</div>
+          </div>
         </div>
       </div>
 
-      <div class="demand-strip reveal reveal-6">
+      <div class="demand-strip reveal reveal-4">
         Adopted by <strong>BDRs</strong>, asked for by <span class="v">CSMEs</span>, demoed by <strong>product specialists</strong>.
       </div>
     </div>
@@ -138,6 +164,123 @@
 <script src="assets/effects.js"></script>
 <script>
   startConstellation('constellation', { density: 0.55 });
+
+  /* ── line chart ─────────────────────────── */
+  (function buildChart() {
+    const svg = document.getElementById('growthChart');
+    const W = 1200, H = 460;
+    const M = { top: 28, right: 36, bottom: 56, left: 64 };
+    const cw = W - M.left - M.right;
+    const ch = H - M.top - M.bottom;
+
+    /* data: month index, value, label, highlight */
+    const data = [
+      { m: 'Jun 25', v: 10,    label: '10',    hi: true  },
+      { m: 'Jul 25', v: 25,    label: null,    hi: false },
+      { m: 'Aug 25', v: 45,    label: null,    hi: false },
+      { m: 'Sep 25', v: 75,    label: null,    hi: false },
+      { m: 'Oct 25', v: 110,   label: null,    hi: false },
+      { m: 'Nov 25', v: 145,   label: null,    hi: false },
+      { m: 'Dec 25', v: 185,   label: '185',   hi: true  },
+      { m: 'Jan 26', v: 300,   label: '300',   hi: true  },
+      { m: 'Feb 26', v: 600,   label: '600',   hi: true  },
+      { m: 'Mar 26', v: 1100,  label: null,    hi: false },
+      { m: 'Apr 26', v: 1900,  label: null,    hi: false },
+      { m: 'May 26', v: 3000,  label: '~3,000', hi: true }
+    ];
+    const N = data.length;
+    const maxV = 3000;
+
+    const xAt = i => M.left + (i / (N - 1)) * cw;
+    const yAt = v => M.top + (1 - v / maxV) * ch;
+
+    /* y-axis gridlines */
+    const ticks = [0, 750, 1500, 2250, 3000];
+    let grid = '';
+    ticks.forEach(t => {
+      const y = yAt(t);
+      grid += `<line x1="${M.left}" y1="${y}" x2="${W - M.right}" y2="${y}" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>`;
+      grid += `<text x="${M.left - 12}" y="${y + 4}" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="13" fill="rgba(244,234,210,0.4)">${t.toLocaleString()}</text>`;
+    });
+
+    /* x-axis labels (every other month to avoid clutter) */
+    let xlabels = '';
+    data.forEach((d, i) => {
+      if (i % 2 === 0 || i === N - 1) {
+        const x = xAt(i);
+        xlabels += `<text x="${x}" y="${H - M.bottom + 24}" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="13" fill="rgba(244,234,210,0.5)" letter-spacing="0.04em">${d.m}</text>`;
+      }
+    });
+
+    /* smooth path via Catmull-Rom → cubic Bezier */
+    const points = data.map((d, i) => [xAt(i), yAt(d.v)]);
+    function smoothPath(pts) {
+      const t = 0.22;
+      let d = `M ${pts[0][0]},${pts[0][1]}`;
+      for (let i = 0; i < pts.length - 1; i++) {
+        const p0 = pts[i - 1] || pts[i];
+        const p1 = pts[i];
+        const p2 = pts[i + 1];
+        const p3 = pts[i + 2] || p2;
+        const c1x = p1[0] + (p2[0] - p0[0]) * t;
+        const c1y = p1[1] + (p2[1] - p0[1]) * t;
+        const c2x = p2[0] - (p3[0] - p1[0]) * t;
+        const c2y = p2[1] - (p3[1] - p1[1]) * t;
+        d += ` C ${c1x},${c1y} ${c2x},${c2y} ${p2[0]},${p2[1]}`;
+      }
+      return d;
+    }
+    const linePath = smoothPath(points);
+    const areaPath = linePath + ` L ${points[N - 1][0]},${H - M.bottom} L ${points[0][0]},${H - M.bottom} Z`;
+
+    /* points + value labels */
+    let dots = '';
+    data.forEach((d, i) => {
+      const x = xAt(i), y = yAt(d.v);
+      if (d.hi) {
+        dots += `<circle cx="${x}" cy="${y}" r="9" fill="#060A14" stroke="url(#strokeGrad)" stroke-width="3"/>`;
+        const tx = i === N - 1 ? x - 14 : (i === 0 ? x + 14 : x);
+        const ty = y - 16;
+        const anchor = i === N - 1 ? 'end' : (i === 0 ? 'start' : 'middle');
+        dots += `<text x="${tx}" y="${ty}" text-anchor="${anchor}" font-family="Inter, sans-serif" font-size="20" font-weight="800" fill="#f4ead2">${d.label}</text>`;
+      } else {
+        dots += `<circle cx="${x}" cy="${y}" r="3.5" fill="rgba(95,212,255,0.55)"/>`;
+      }
+    });
+
+    /* assemble */
+    svg.innerHTML = `
+      <defs>
+        <linearGradient id="strokeGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#5fd4ff"/>
+          <stop offset="100%" stop-color="#c084fc"/>
+        </linearGradient>
+        <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"  stop-color="#c084fc" stop-opacity="0.42"/>
+          <stop offset="60%" stop-color="#5fd4ff" stop-opacity="0.16"/>
+          <stop offset="100%" stop-color="#5fd4ff" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      ${grid}
+      ${xlabels}
+      <path d="${areaPath}" fill="url(#areaGrad)"/>
+      <path id="growthLine" d="${linePath}" fill="none" stroke="url(#strokeGrad)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+      ${dots}
+    `;
+
+    /* draw-on animation */
+    const line = document.getElementById('growthLine');
+    if (line && line.getTotalLength) {
+      const len = line.getTotalLength();
+      line.style.strokeDasharray = len;
+      line.style.strokeDashoffset = len;
+      requestAnimationFrame(() => {
+        line.style.transition = 'stroke-dashoffset 1.8s cubic-bezier(0.22, 1, 0.36, 1)';
+        line.style.strokeDashoffset = 0;
+      });
+    }
+  })();
+
   document.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowRight' || e.key === ' ') location.href = '05-roadmap.html';
     if (e.key === 'ArrowLeft') location.href = '03-summit.html';
