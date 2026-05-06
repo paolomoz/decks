@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>07 · SLICC · EMA</title>
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+  body {
+    background:
+      radial-gradient(ellipse at 90% 0%, rgba(255, 217, 138, 0.12) 0%, transparent 55%),
+      radial-gradient(ellipse at 0% 100%, rgba(95, 212, 255, 0.08) 0%, transparent 55%),
+      linear-gradient(180deg, #0a0d1a 0%, #15101e 60%, #1a1410 100%);
+  }
+
+  .slicc-bg-text {
+    position: absolute; top: 50%; right: -2%;
+    transform: translateY(-50%);
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600; font-style: italic;
+    font-size: clamp(8rem, 20vw, 20rem); line-height: 1;
+    color: var(--amber); opacity: 0.04;
+    pointer-events: none; user-select: none; letter-spacing: -0.04em;
+    z-index: 0;
+  }
+
+  .slicc-eyebrow { color: var(--amber); }
+  .slicc-eyebrow .vegas {
+    margin-left: 0.6rem;
+    padding: 0.16rem 0.45rem;
+    background: rgba(255, 217, 138, 0.12);
+    border: 1px solid rgba(255, 217, 138, 0.3);
+    border-radius: 3px;
+    font-size: 0.58rem;
+  }
+  .slicc-title .serif {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic; font-weight: 500;
+    background: linear-gradient(180deg, var(--amber) 0%, #c9822d 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .slicc-title .accent { color: var(--amber); }
+
+  .slicc-grid {
+    display: grid; grid-template-rows: auto 1fr;
+    gap: 1rem; flex: 1; min-height: 0;
+  }
+
+  /* Stat strip */
+  .stat-strip {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+    background: rgba(255, 217, 138, 0.12);
+    border: 1px solid rgba(255, 217, 138, 0.18);
+    border-radius: 4px; overflow: hidden;
+  }
+  .stat-cell {
+    padding: 0.85rem 1rem;
+    background: rgba(6, 10, 20, 0.7);
+    backdrop-filter: blur(6px);
+    position: relative;
+  }
+  .stat-cell .lbl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.55rem; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--amber-burnt); margin-bottom: 0.35rem;
+  }
+  .stat-cell .num {
+    font-family: 'Inter', sans-serif;
+    font-weight: 200; font-size: clamp(1.6rem, 3vw, 2.4rem);
+    color: var(--dust); line-height: 1; letter-spacing: -0.03em;
+  }
+  .stat-cell .num .strong { font-weight: 800; }
+  .stat-cell .num .unit {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic; font-weight: 500;
+    font-size: 0.58em; color: var(--amber);
+    margin-left: 0.18rem;
+  }
+  .stat-cell .sub {
+    font-size: 0.7rem; color: var(--dust-faint); margin-top: 0.3rem;
+    line-height: 1.35;
+  }
+
+  /* Story columns */
+  .slicc-cols {
+    display: grid; grid-template-columns: 1.15fr 1.15fr 1fr;
+    gap: 1px; background: rgba(255, 217, 138, 0.12);
+    border: 1px solid rgba(255, 217, 138, 0.12);
+    min-height: 0;
+  }
+  .scol {
+    padding: 0.95rem 1.1rem;
+    background: rgba(6, 10, 20, 0.72);
+    display: flex; flex-direction: column; min-height: 0;
+    position: relative;
+  }
+  .scol .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.56rem; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--amber-burnt); margin-bottom: 0.35rem;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .scol .tag .dot {
+    width: 6px; height: 6px; border-radius: 50%; background: var(--amber);
+    box-shadow: 0 0 8px var(--amber);
+  }
+  .scol .head {
+    font-size: 0.98rem; font-weight: 700; color: var(--dust);
+    margin-bottom: 0.45rem; letter-spacing: -0.01em; line-height: 1.2;
+  }
+  .scol .head em {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic; font-weight: 500; color: var(--amber);
+  }
+  .scol p {
+    font-size: 0.76rem; color: var(--dust-dim); line-height: 1.5;
+    margin-bottom: 0.5rem;
+  }
+  .scol p strong { color: var(--amber); font-weight: 700; }
+  .scol .roster {
+    margin-top: auto; padding-top: 0.55rem;
+    border-top: 1px dashed rgba(255, 217, 138, 0.15);
+    display: flex; flex-wrap: wrap; gap: 0.3rem;
+  }
+  .scol .chip {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem; letter-spacing: 0.06em;
+    padding: 0.18rem 0.45rem;
+    background: rgba(255, 217, 138, 0.06);
+    border: 1px solid rgba(255, 217, 138, 0.18);
+    border-radius: 3px;
+    color: var(--dust);
+  }
+  .scol .chip.warm {
+    background: rgba(255, 217, 138, 0.14);
+    border-color: rgba(255, 217, 138, 0.4);
+    color: var(--amber);
+  }
+  .scol .chip.cool {
+    background: rgba(95, 212, 255, 0.08);
+    border-color: rgba(95, 212, 255, 0.3);
+    color: #5fd4ff;
+  }
+  .scol .chip.customer {
+    background: rgba(189, 145, 255, 0.1);
+    border-color: rgba(189, 145, 255, 0.35);
+    color: #d9c5ff;
+  }
+
+  /* Bottom takeaway */
+  .takeaway {
+    margin-top: 0.7rem;
+    padding: 0.6rem 1rem;
+    border-left: 2px solid var(--amber);
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 0.95rem; line-height: 1.4;
+    color: var(--dust-dim);
+  }
+  .takeaway strong {
+    font-family: 'Inter', sans-serif; font-style: normal;
+    font-weight: 700; color: var(--amber);
+  }
+
+  /* Ice-cream easter egg — floats top-left */
+  .ic-egg {
+    position: absolute;
+    left: 1rem; top: 4.5rem;
+    width: 72px; height: 130px;
+    z-index: 4;
+    pointer-events: none;
+  }
+  .ic-egg svg {
+    width: 100%; height: 100%;
+    cursor: pointer; pointer-events: auto;
+    transform-origin: 50% 95%;
+    animation: icSway 4s ease-in-out infinite;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    filter: drop-shadow(0 6px 14px rgba(255, 217, 138, 0.22));
+  }
+  .ic-egg svg:hover { filter: drop-shadow(0 6px 22px rgba(255, 217, 138, 0.45)); }
+  @keyframes icSway {
+    0%, 100% { transform: rotate(-3deg); }
+    50% { transform: rotate(3deg); }
+  }
+  .ic-egg .ic-hint {
+    position: absolute; bottom: -14px; left: 50%;
+    transform: translateX(-50%);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.5rem; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--dust-faint); white-space: nowrap;
+    opacity: 0.7;
+  }
+
+  @media (max-width: 1180px) {
+    .ic-egg { display: none; }
+  }
+  @media (max-width: 980px) {
+    .stat-strip { grid-template-columns: repeat(2, 1fr); }
+    .slicc-cols { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<canvas class="bg-canvas" id="dust"></canvas>
+
+<nav class="topnav">
+  <div class="logo">
+    <span class="a">Adobe</span>
+    <span class="sep">/</span>
+    <span>Experience Modernization Agent</span>
+  </div>
+  <div class="slide-counter">SLIDE · 7 / 8</div>
+  <div class="topnav-actions">
+    <a class="nav-link" href="04-bridge.html">← Prev</a>
+    <a class="nav-link" href="07-lab.html">Next →</a>
+  </div>
+</nav>
+
+<aside class="side-dots">
+  <a href="index.html" data-label="Cover"></a>
+  <a href="01-anatomy.html" data-label="1. Anatomy"></a>
+  <a href="02-jobs.html" data-label="2. Jobs"></a>
+  <a href="05-adoption.html" data-label="3. Adoption"></a>
+  <a href="03-funnel.html" data-label="4. PLG funnel"></a>
+  <a href="06-reception.html" data-label="5. Reception"></a>
+  <a href="04-bridge.html" data-label="6. Bridge"></a>
+  <a href="04b-slicc.html" class="current" data-label="7. SLICC"></a>
+  <a href="07-lab.html" data-label="8. Lab"></a>
+</aside>
+
+<main>
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="slicc-bg-text reveal">SLICC</div>
+
+      <div class="eyebrow slicc-eyebrow reveal">
+        07 · POST-SUMMIT TELEMETRY
+        <span class="vegas">VEGAS · APR 20</span>
+      </div>
+      <h1 class="slide-title slicc-title reveal reveal-1">
+        We <span class="serif">announced.</span> The ecosystem <span class="accent">ran with it.</span>
+      </h1>
+      <p class="slide-sub reveal reveal-2">
+        SLICC went on stage at Summit. 17 days later, partners, customers and Adobe insiders are
+        already using it — and figuring out how to extend it — without us pushing.
+      </p>
+
+      <div class="slicc-grid">
+        <!-- Stat strip -->
+        <div class="stat-strip reveal reveal-3">
+          <div class="stat-cell">
+            <div class="lbl">Classified sessions</div>
+            <div class="num"><span class="strong">982</span></div>
+            <div class="sub">17 days of organic post-Summit activity</div>
+          </div>
+          <div class="stat-cell">
+            <div class="lbl">Distinct users · IMS orgs</div>
+            <div class="num"><span class="strong">387</span> <span class="unit">across</span> <span class="strong">30+</span></div>
+            <div class="sub">Reach extends well beyond Vegas attendees</div>
+          </div>
+          <div class="stat-cell">
+            <div class="lbl">Domains migrated organically</div>
+            <div class="num"><span class="strong">128</span> <span class="unit">of which</span> <span class="strong">119</span></div>
+            <div class="sub">Real customer/external brands — not the demo</div>
+          </div>
+          <div class="stat-cell">
+            <div class="lbl">Skill-authoring sessions</div>
+            <div class="num"><span class="strong">77</span> <span class="unit">·</span> <span class="strong">8%</span></div>
+            <div class="sub">Users <em>extending</em> the platform — not just consuming</div>
+          </div>
+        </div>
+
+        <!-- Three story columns -->
+        <div class="slicc-cols reveal reveal-4">
+          <!-- Platform extension -->
+          <div class="scol">
+            <div class="tag"><span class="dot"></span>Platform extension · the buried lede</div>
+            <div class="head">Microsoft is <em>building on</em> SLICC, not just trying it.</div>
+            <p>
+              <strong>David Asuncion</strong> + 3 colleagues are using SLICC to <strong>build a SLICC
+              skill</strong> — <code>aem-authoring</code> — that automates AEM Classic for the M365 product
+              page library. <strong>10.3M output tokens</strong>, 8 days continuous, weekends included.
+            </p>
+            <p style="font-size:0.72rem; color: var(--dust-faint);">
+              143 OneCloud components indexed · custom CLI · 24/7 SharePoint sync · 9-way parallel scoops.
+              The most advanced adoption signal in the data.
+            </p>
+            <div class="roster">
+              <span class="chip warm">Microsoft · M365</span>
+              <span class="chip">David Asuncion</span>
+              <span class="chip">Vishnu Paturu</span>
+            </div>
+          </div>
+
+          <!-- Partner ecosystem -->
+          <div class="scol">
+            <div class="tag"><span class="dot"></span>Partner ecosystem · in production</div>
+            <div class="head">A real partner footprint — and one is <em>outperforming</em> us.</div>
+            <p>
+              <strong>Concentrix</strong> — 6 engineers across 3 IMS orgs, on a live ZimVie migration.
+              <strong>Slalom</strong> — 3 engineers, <strong>38% completion</strong>, beating internal
+              Adobe teams (~33%). They've figured out SLICC at a partner level.
+            </p>
+            <div class="roster">
+              <span class="chip warm">Concentrix · 6</span>
+              <span class="chip warm">Slalom · 38%</span>
+              <span class="chip">JAKALA</span>
+              <span class="chip">DWAO</span>
+              <span class="chip">Hero Digital</span>
+              <span class="chip">Huge Inc</span>
+              <span class="chip">Perficient</span>
+              <span class="chip">KPMG</span>
+              <span class="chip">Pluralsight</span>
+              <span class="chip">Kopius</span>
+              <span class="chip">diva-e</span>
+              <span class="chip">Anchora</span>
+              <span class="chip">Kingdom Branding</span>
+              <span class="chip customer">Audemars Piguet · direct</span>
+              <span class="chip customer">Telenet · direct</span>
+            </div>
+          </div>
+
+          <!-- Daily-ops adopters -->
+          <div class="scol">
+            <div class="tag"><span class="dot"></span>Daily-ops adopters · the seed</div>
+            <div class="head">10 people are already <em>living</em> in SLICC.</div>
+            <p>
+              Migrations + skill-authoring + content + refinement — all in parallel, short sessions,
+              repeat visits. Not running a project. Treating SLICC as a <strong>daily-ops assistant</strong>
+              and building personal tools on top.
+            </p>
+            <p style="font-size:0.72rem; color: var(--dust-faint);">
+              Courtney Remekie built a comms dashboard with a 60s cron refresh agent.
+              The tool became the morning routine.
+            </p>
+            <div class="roster">
+              <span class="chip cool">Courtney Remekie</span>
+              <span class="chip cool">Katie Sexton</span>
+              <span class="chip cool">Chris Pilsworth</span>
+              <span class="chip cool">Paolo Mottadelli</span>
+              <span class="chip cool">Eric Matisoff</span>
+              <span class="chip cool">+ 5 more</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="takeaway reveal reveal-5">
+        Direct customers (<strong>Audemars Piguet</strong>, <strong>Telenet</strong>) are logging in
+        without a partner SI. <strong>92%</strong> completion on the canonical Summit demo. The shape
+        of adoption — follow-on work, partner engagement, platform extension, daily-ops use — is what
+        we'd hope for.
+      </div>
+
+      <!-- Ice-cream easter egg -->
+      <div class="ic-egg reveal reveal-5" aria-hidden="false">
+        <svg id="icecream" viewBox="0 0 120 200" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="cone-grad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#d49658"/>
+              <stop offset="100%" stop-color="#7a4f1f"/>
+            </linearGradient>
+            <pattern id="waffle" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+              <line x1="0" y1="0" x2="8" y2="0" stroke="rgba(0,0,0,0.3)" stroke-width="0.8"/>
+              <line x1="0" y1="0" x2="0" y2="8" stroke="rgba(0,0,0,0.3)" stroke-width="0.8"/>
+            </pattern>
+            <radialGradient id="scoop-amber" cx="35%" cy="35%">
+              <stop offset="0%" stop-color="#fff5d6"/>
+              <stop offset="60%" stop-color="#ffd98a"/>
+              <stop offset="100%" stop-color="#c9822d"/>
+            </radialGradient>
+            <radialGradient id="scoop-cyan" cx="35%" cy="35%">
+              <stop offset="0%" stop-color="#e6f6ff"/>
+              <stop offset="60%" stop-color="#5fd4ff"/>
+              <stop offset="100%" stop-color="#1e7aa8"/>
+            </radialGradient>
+            <radialGradient id="scoop-violet" cx="35%" cy="35%">
+              <stop offset="0%" stop-color="#f0e6ff"/>
+              <stop offset="60%" stop-color="#bd91ff"/>
+              <stop offset="100%" stop-color="#5e2db5"/>
+            </radialGradient>
+          </defs>
+
+          <!-- Cone -->
+          <path d="M38 122 L82 122 L60 198 Z" fill="url(#cone-grad)"/>
+          <path d="M38 122 L82 122 L60 198 Z" fill="url(#waffle)" opacity="0.7"/>
+
+          <!-- Scoop 1 (amber, base) -->
+          <ellipse cx="60" cy="118" rx="34" ry="22" fill="url(#scoop-amber)"/>
+          <path d="M30 122 Q26 138 32 144 Q38 138 36 124 Z" fill="url(#scoop-amber)"/>
+          <path d="M88 120 Q92 134 86 144 Q80 138 82 122 Z" fill="url(#scoop-amber)"/>
+
+          <!-- Scoop 2 (cyan) -->
+          <ellipse cx="60" cy="86" rx="26" ry="18" fill="url(#scoop-cyan)"/>
+
+          <!-- Scoop 3 (violet) -->
+          <ellipse cx="60" cy="58" rx="20" ry="14" fill="url(#scoop-violet)"/>
+
+          <!-- Cherry on top -->
+          <g id="cherry">
+            <line x1="60" y1="42" x2="60" y2="28" stroke="#1d8a5f" stroke-width="2"/>
+            <ellipse cx="64" cy="32" rx="3" ry="2" fill="#1d8a5f"/>
+            <circle cx="60" cy="46" r="6" fill="#ff4d6d"/>
+            <circle cx="58" cy="44" r="2" fill="#ffb3c1" opacity="0.85"/>
+          </g>
+
+          <!-- Sprinkles target -->
+          <g id="sprinkles"></g>
+        </svg>
+        <div class="ic-hint">click me</div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="slide-foot">
+  <a href="04-bridge.html">← Prev</a>
+  <a href="07-lab.html">Next →</a>
+</div>
+
+<script src="assets/effects.js"></script>
+<script>
+  startStarfield('dust', { density: 0.6, color1: '#FFD98A', color2: '#c9822d', color3: '#5fd4ff', drift: 0.025 });
+  attachCursorGlow('rgba(255, 217, 138, 0.05)');
+
+  // Ice-cream easter egg → click triggers cherry hop + sprinkles burst + cone wiggle
+  const ic = document.getElementById('icecream');
+  const sprinklesG = document.getElementById('sprinkles');
+  const cherry = document.getElementById('cherry');
+  const sprinkleColors = ['#ffd98a', '#5fd4ff', '#bd91ff', '#ff7da9', '#5fe6b3', '#fff5d6'];
+  if (ic) {
+    ic.addEventListener('click', () => {
+      ic.style.animation = 'none';
+      ic.style.transform = 'rotate(-8deg) scale(1.06)';
+      setTimeout(() => {
+        ic.style.transform = 'rotate(7deg) scale(1.02)';
+        setTimeout(() => { ic.style.transform = ''; ic.style.animation = ''; }, 200);
+      }, 140);
+
+      if (cherry) {
+        cherry.style.transition = 'transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1)';
+        cherry.style.transform = 'translateY(-12px) rotate(-12deg)';
+        setTimeout(() => { cherry.style.transform = ''; }, 380);
+      }
+
+      for (let i = 0; i < 18; i++) {
+        const s = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        const angle = Math.random() * Math.PI * 2;
+        const dist = 30 + Math.random() * 60;
+        const dx = Math.cos(angle) * dist;
+        const dy = Math.sin(angle) * dist - 8;
+        s.setAttribute('x', 59);
+        s.setAttribute('y', 44);
+        s.setAttribute('width', 1.6 + Math.random() * 1.6);
+        s.setAttribute('height', 5 + Math.random() * 3);
+        s.setAttribute('rx', 1);
+        s.setAttribute('fill', sprinkleColors[Math.floor(Math.random() * sprinkleColors.length)]);
+        const rot = Math.random() * 360;
+        s.setAttribute('transform', `rotate(${rot} 60 46)`);
+        s.style.transition = 'transform 1.0s ease-out, opacity 1.0s ease-out';
+        sprinklesG.appendChild(s);
+        requestAnimationFrame(() => {
+          s.setAttribute('transform', `translate(${dx} ${dy}) rotate(${rot + 180} 60 46)`);
+          s.style.opacity = '0';
+        });
+        setTimeout(() => s.remove(), 1100);
+      }
+    });
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') location.href = '07-lab.html';
+    if (e.key === 'ArrowLeft') location.href = '04-bridge.html';
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>04 · PLG Funnel · EMA</title>
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+  body {
+    background:
+      radial-gradient(ellipse at 80% 20%, rgba(95, 212, 255, 0.08) 0%, transparent 55%),
+      radial-gradient(ellipse at 10% 80%, rgba(146, 86, 217, 0.07) 0%, transparent 55%),
+      linear-gradient(180deg, #050b18 0%, #0a1326 100%);
+  }
+  .bg-grid-dataviz {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image:
+      linear-gradient(rgba(95, 212, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(95, 212, 255, 0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+  }
+
+  .funnel-eyebrow { color: var(--term-cyan); }
+  .funnel-title .accent { color: var(--term-cyan); text-shadow: 0 0 20px rgba(95, 212, 255, 0.35); }
+
+  .funnel-grid {
+    display: grid; grid-template-columns: 1.05fr 1fr; gap: 2rem;
+    flex: 1; min-height: 0; align-items: center;
+  }
+
+  .funnel-stages {
+    display: flex; flex-direction: column; gap: 0.4rem;
+  }
+  .stg {
+    height: 56px; display: grid;
+    grid-template-columns: 76px 1fr auto; gap: 0.9rem;
+    align-items: center; position: relative;
+  }
+  .stg .num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.56rem; letter-spacing: 0.16em; color: var(--dust-faint);
+    text-transform: uppercase; text-align: right;
+  }
+  .stg .bar {
+    height: 38px; position: relative; border-radius: 3px;
+    background: linear-gradient(90deg, rgba(95, 212, 255, 0.15) 0%, rgba(95, 212, 255, 0.04) 100%);
+    border: 1px solid rgba(95, 212, 255, 0.22); overflow: hidden;
+  }
+  .stg .fill {
+    height: 100%; background: linear-gradient(90deg, var(--term-cyan), rgba(95, 212, 255, 0.45));
+    transform-origin: left; transform: scaleX(0);
+    animation: fillGrow 1.4s 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+  @keyframes fillGrow { to { transform: scaleX(var(--scale, 1)); } }
+  .stg .label {
+    position: absolute; left: 0.9rem; top: 50%; transform: translateY(-50%);
+    z-index: 2; font-weight: 600; font-size: 0.86rem; color: var(--dust);
+  }
+  .stg .meta {
+    position: absolute; right: 0.85rem; top: 50%; transform: translateY(-50%);
+    z-index: 2; font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem; color: var(--dust-faint); letter-spacing: 0.08em;
+  }
+  .stg .count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.32rem; font-weight: 700; color: var(--term-cyan);
+    text-align: right; min-width: 70px;
+    text-shadow: 0 0 12px rgba(95, 212, 255, 0.35);
+  }
+
+  .conv-row {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 1px; background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    margin-top: 0.7rem;
+  }
+  .cv {
+    padding: 0.55rem 0.7rem; background: rgba(6, 10, 20, 0.7);
+  }
+  .cv .lbl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.55rem; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--dust-faint); margin-bottom: 0.2rem;
+  }
+  .cv .val { font-size: 1.05rem; font-weight: 700; color: var(--term-cyan); font-family: 'JetBrains Mono', monospace; }
+  .cv .delta { font-size: 0.6rem; margin-top: 0.05rem; }
+
+  /* Right column: narrative + experiments */
+  .narr h3 {
+    font-size: 0.9rem; font-weight: 700; color: var(--dust);
+    margin-bottom: 0.5rem; letter-spacing: -0.01em;
+  }
+  .narr p {
+    font-size: 0.82rem; color: var(--dust-dim); line-height: 1.55;
+    margin-bottom: 0.8rem;
+  }
+  .narr-callout {
+    background: rgba(95, 212, 255, 0.05);
+    border-left: 2px solid var(--term-cyan);
+    padding: 0.7rem 0.95rem; margin: 0.7rem 0 1rem;
+    font-size: 0.78rem; color: var(--dust);
+    line-height: 1.5;
+  }
+  .narr-callout strong { color: var(--term-cyan); }
+
+  .exp-list { list-style: none; border-top: 1px solid rgba(255, 255, 255, 0.08); }
+  .exp-list li {
+    padding: 0.42rem 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    display: grid; grid-template-columns: auto 1fr auto; gap: 0.7rem;
+    align-items: center; font-size: 0.78rem;
+  }
+  .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.54rem; letter-spacing: 0.14em; text-transform: uppercase;
+    padding: 0.14rem 0.42rem; border-radius: 3px;
+    background: rgba(95, 212, 255, 0.1); color: var(--term-cyan);
+    border: 1px solid rgba(95, 212, 255, 0.22);
+  }
+  .tag.ok { background: rgba(40, 210, 120, 0.1); color: var(--term-green); border-color: rgba(40, 210, 120, 0.22); }
+  .tag.warn { background: rgba(240, 160, 0, 0.1); color: var(--term-amber); border-color: rgba(240, 160, 0, 0.22); }
+  .exp-list .name { color: var(--dust); font-weight: 500; }
+  .exp-list .res { color: var(--dust-faint); font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; }
+
+  @media (max-width: 980px) {
+    .funnel-grid { grid-template-columns: 1fr; gap: 1.2rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-grid-dataviz"></div>
+
+<nav class="topnav">
+  <div class="logo">
+    <span class="a">Adobe</span>
+    <span class="sep">/</span>
+    <span>Experience Modernization Agent</span>
+  </div>
+  <div class="slide-counter">SLIDE · 4 / 8</div>
+  <div class="topnav-actions">
+    <a class="nav-link" href="05-adoption.html">← Prev</a>
+    <a class="nav-link" href="06-reception.html">Next →</a>
+  </div>
+</nav>
+
+<aside class="side-dots">
+  <a href="index.html" data-label="Cover"></a>
+  <a href="01-anatomy.html" data-label="1. Anatomy"></a>
+  <a href="02-jobs.html" data-label="2. Jobs"></a>
+  <a href="05-adoption.html" data-label="3. Adoption"></a>
+  <a href="03-funnel.html" class="current" data-label="4. PLG funnel"></a>
+  <a href="06-reception.html" data-label="5. Reception"></a>
+  <a href="04-bridge.html" data-label="6. Bridge"></a>
+  <a href="04b-slicc.html" data-label="7. SLICC"></a>
+  <a href="07-lab.html" data-label="8. Lab"></a>
+</aside>
+
+<main>
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow funnel-eyebrow reveal">04 · PRODUCT-LED GROWTH</div>
+      <h1 class="slide-title funnel-title reveal reveal-1">
+        The funnel <span class="accent">tells the truth.</span>
+      </h1>
+      <p class="slide-sub reveal reveal-2">
+        We treat EMA like a growth product. Every stage is instrumented. Every drop-off is a hypothesis.
+        Source: <span class="mono">growth-lab.corp.adobe.com/xmod-pipeline</span>
+      </p>
+
+      <div class="funnel-grid">
+        <!-- Funnel viz -->
+        <div class="reveal reveal-3">
+          <div class="funnel-stages">
+            <div class="stg">
+              <div class="num">01 / TOP</div>
+              <div class="bar"><div class="fill" style="--scale: 1;"></div>
+                <div class="label">Contacted</div>
+                <div class="meta">awareness</div>
+              </div>
+              <div class="count" data-count="257">0</div>
+            </div>
+            <div class="stg">
+              <div class="num">02</div>
+              <div class="bar"><div class="fill" style="--scale: 0.887;"></div>
+                <div class="label">Provisioned</div>
+                <div class="meta">access granted</div>
+              </div>
+              <div class="count" data-count="228">0</div>
+            </div>
+            <div class="stg">
+              <div class="num">03</div>
+              <div class="bar"><div class="fill" style="--scale: 0.439;"></div>
+                <div class="label">Active</div>
+                <div class="meta">≥ 1 session</div>
+              </div>
+              <div class="count" data-count="113">0</div>
+            </div>
+            <div class="stg">
+              <div class="num">04</div>
+              <div class="bar"><div class="fill" style="--scale: 0.101;"></div>
+                <div class="label">Build</div>
+                <div class="meta">running migration</div>
+              </div>
+              <div class="count" data-count="26">0</div>
+            </div>
+            <div class="stg">
+              <div class="num">05 / BTM</div>
+              <div class="bar"><div class="fill" style="--scale: 0.019;"></div>
+                <div class="label">Live</div>
+                <div class="meta">in production</div>
+              </div>
+              <div class="count" data-count="5">0</div>
+            </div>
+          </div>
+
+          <div class="conv-row">
+            <div class="cv"><div class="lbl">Provision</div><div class="val">89%</div><div class="delta" style="color:#28d278;">healthy</div></div>
+            <div class="cv"><div class="lbl">Activation</div><div class="val">50%</div><div class="delta" style="color: var(--term-amber);">+10pt goal</div></div>
+            <div class="cv"><div class="lbl">Build conv.</div><div class="val">23%</div><div class="delta" style="color: var(--term-amber);">friction zone</div></div>
+            <div class="cv"><div class="lbl">Top→Live</div><div class="val">1.9%</div><div class="delta" style="color: rgba(255, 100, 100, 0.8);">honest read</div></div>
+          </div>
+        </div>
+
+        <!-- Narrative + experiments -->
+        <div class="narr reveal reveal-4">
+          <h3>What the shape tells us</h3>
+          <p>
+            Provisioning is solved. <strong style="color: var(--term-cyan);">The biggest cliff is between
+            "logged in" and "actually started building."</strong> That's where most users feel the gravity
+            of their existing process — review cycles, content lock-in, brand sign-off, legal.
+          </p>
+
+          <div class="narr-callout">
+            <strong>Q2 hypothesis:</strong> Activation drops because the first session has no obvious
+            "win" inside 15 minutes. Fix → opinionated onboarding that ships <em>one</em> live page in
+            the first 15 minutes, before any project structure.
+          </div>
+
+          <h3 style="margin-top: 0.4rem;">Active growth experiments</h3>
+          <ul class="exp-list">
+            <li>
+              <span class="tag ok">shipped</span>
+              <span class="name">Onboarding rewrite — value before structure</span>
+              <span class="res">+18% activation</span>
+            </li>
+            <li>
+              <span class="tag">running</span>
+              <span class="name">Office-hours channel for Build users</span>
+              <span class="res">n=12 cohort</span>
+            </li>
+            <li>
+              <span class="tag">running</span>
+              <span class="name">Skill marketplace surfacing</span>
+              <span class="res">A/B · 50/50</span>
+            </li>
+            <li>
+              <span class="tag warn">pivot</span>
+              <span class="name">"Gallery" of public live sites</span>
+              <span class="res">low CTR · iterate</span>
+            </li>
+            <li>
+              <span class="tag">queued</span>
+              <span class="name">Trial → managed pilot escalation</span>
+              <span class="res">design phase</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="slide-foot">
+  <a href="05-adoption.html">← Prev</a>
+  <a href="06-reception.html">Next →</a>
+</div>
+
+<script src="assets/effects.js"></script>
+<script>
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') location.href = '06-reception.html';
+    if (e.key === 'ArrowLeft') location.href = '05-adoption.html';
+  });
+</script>
+
+</body>
+</html>

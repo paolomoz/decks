@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>06 · Bridge · EMA</title>
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+  body {
+    background:
+      radial-gradient(ellipse at 20% 100%, rgba(28, 25, 23, 0.6) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 0%, rgba(255, 217, 138, 0.1) 0%, transparent 55%),
+      linear-gradient(180deg, #0c1733 0%, #1a1410 60%, #2a1f08 100%);
+  }
+
+  .bridge-eyebrow { color: var(--amber); }
+  .bridge-title .accent { color: var(--amber); }
+  .bridge-title .serif {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic; font-weight: 500;
+    background: linear-gradient(180deg, var(--amber) 0%, #c9822d 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .bridge-grid {
+    display: grid; grid-template-rows: 200px auto 1fr;
+    gap: 1.1rem; flex: 1; min-height: 0;
+  }
+
+  /* Bridge stage */
+  .bridge-stage {
+    position: relative;
+    border-top: 1px solid rgba(255, 217, 138, 0.12);
+    border-bottom: 1px solid rgba(255, 217, 138, 0.12);
+  }
+  .bridge-stage::before, .bridge-stage::after {
+    content: ''; position: absolute; bottom: 0; width: 30%; height: 70%;
+  }
+  .bridge-stage::before {
+    left: 0;
+    background: linear-gradient(180deg, transparent 0%, rgba(20, 30, 60, 0.6) 100%);
+    clip-path: polygon(0 70%, 30% 30%, 60% 50%, 90% 35%, 100% 50%, 100% 100%, 0 100%);
+  }
+  .bridge-stage::after {
+    right: 0;
+    background: linear-gradient(180deg, transparent 0%, rgba(80, 50, 10, 0.7) 100%);
+    clip-path: polygon(0 50%, 20% 35%, 50% 50%, 80% 25%, 100% 60%, 100% 100%, 0 100%);
+  }
+
+  .island-label {
+    position: absolute; bottom: 1.1rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.58rem; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--dust-faint); padding: 0.35rem 0.7rem;
+    background: rgba(0, 0, 0, 0.5); border-radius: 3px; z-index: 5;
+  }
+  .island-label.left { left: 3%; border-left: 2px solid #5fd4ff; }
+  .island-label.right { right: 3%; border-left: 2px solid var(--amber); }
+  .island-label .big { display: block; font-size: 0.85rem; color: var(--dust); margin-top: 0.2rem; letter-spacing: 0.04em; text-transform: none; font-family: 'Inter', sans-serif; font-weight: 700; }
+
+  .bridge-line {
+    position: absolute; top: 50%; left: 12%; right: 12%; height: 2px;
+    background: linear-gradient(90deg, rgba(95, 212, 255, 0.6) 0%, var(--amber) 50%, rgba(255, 217, 138, 0.6) 100%);
+    transform: translateY(-50%);
+    box-shadow: 0 0 12px rgba(255, 217, 138, 0.4);
+  }
+  .bridge-line::before, .bridge-line::after {
+    content: ''; position: absolute; top: -4px; width: 9px; height: 9px;
+    border-radius: 50%; background: var(--amber);
+    box-shadow: 0 0 14px var(--amber);
+  }
+  .bridge-line::before { left: 0; background: #5fd4ff; box-shadow: 0 0 14px #5fd4ff; }
+  .bridge-line::after { right: 0; }
+
+  /* Sparkling pulse particles */
+  .pulse {
+    position: absolute; top: 50%; width: 6px; height: 6px;
+    border-radius: 50%; background: var(--amber);
+    box-shadow: 0 0 12px var(--amber);
+    transform: translateY(-50%);
+    animation: travel 3.4s linear infinite;
+  }
+  .pulse:nth-child(2) { animation-delay: 0.85s; background: #5fd4ff; box-shadow: 0 0 12px #5fd4ff; }
+  .pulse:nth-child(3) { animation-delay: 1.7s; background: #FFD98A; }
+  .pulse:nth-child(4) { animation-delay: 2.5s; background: #c9822d; }
+  .pulse:nth-child(5) { animation-delay: 0.4s; background: #fff; box-shadow: 0 0 12px #fff; width: 4px; height: 4px; }
+  .pulse:nth-child(6) { animation-delay: 1.3s; background: #fff; box-shadow: 0 0 12px #fff; width: 4px; height: 4px; }
+  @keyframes travel {
+    from { left: 12%; opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    to { left: 88%; opacity: 0; }
+  }
+
+  /* Keystones */
+  .keystone {
+    position: absolute; top: calc(50% - 26px);
+    width: 80px; padding: 0.32rem 0.5rem;
+    background: rgba(20, 14, 6, 0.92);
+    border: 1px solid rgba(255, 217, 138, 0.25);
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.54rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--amber); text-align: center;
+    backdrop-filter: blur(8px);
+  }
+  .keystone::before {
+    content: ''; position: absolute; left: 50%; bottom: -8px;
+    transform: translateX(-50%); width: 1px; height: 8px;
+    background: rgba(255, 217, 138, 0.4);
+  }
+  .keystone.k1 { left: 22%; }
+  .keystone.k2 { left: 42%; }
+  .keystone.k3 { left: 62%; }
+  .keystone.k4 { left: 78%; }
+
+  /* Telenet quote */
+  .telenet-quote {
+    padding: 0.95rem 1.2rem 0.95rem 1.4rem;
+    background: rgba(6, 10, 20, 0.55);
+    border: 1px solid rgba(255, 217, 138, 0.15);
+    border-left: 3px solid var(--amber);
+    border-radius: 4px;
+    backdrop-filter: blur(12px);
+    position: relative;
+    display: flex; align-items: center; gap: 1.4rem;
+  }
+  .telenet-quote::before {
+    content: '"'; position: absolute; top: -16px; left: 1rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3.4rem; color: var(--amber); line-height: 1;
+    background: #1a1410; padding: 0 0.45rem;
+  }
+  .telenet-quote .q-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic; font-size: 1.05rem; line-height: 1.4;
+    color: var(--dust); flex: 1;
+  }
+  .telenet-quote .q-text strong {
+    color: var(--amber); font-style: normal;
+    font-family: 'Inter', sans-serif; font-weight: 700;
+  }
+  .telenet-quote .q-attr {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem; letter-spacing: 0.13em; text-transform: uppercase;
+    color: var(--dust-faint); white-space: nowrap;
+    border-left: 1px solid rgba(255, 217, 138, 0.18);
+    padding-left: 1.2rem;
+  }
+
+  /* Three columns */
+  .bridge-columns {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+    background: rgba(255, 217, 138, 0.12);
+    border: 1px solid rgba(255, 217, 138, 0.12);
+    min-height: 0;
+  }
+  .col {
+    padding: 0.85rem 1rem;
+    background: rgba(6, 10, 20, 0.7);
+    display: flex; flex-direction: column;
+  }
+  .col h4 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.58rem; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--amber-burnt); margin-bottom: 0.4rem;
+  }
+  .col .head {
+    font-size: 0.92rem; font-weight: 700; color: var(--dust);
+    margin-bottom: 0.4rem; letter-spacing: -0.01em;
+  }
+  .col p { font-size: 0.76rem; color: var(--dust-dim); line-height: 1.5; }
+  .col p strong { color: var(--amber); }
+  .col ul { list-style: none; margin-top: auto; padding-top: 0.4rem; }
+  .col li {
+    font-size: 0.7rem; color: var(--dust-dim); padding: 0.18rem 0 0.18rem 0.9rem;
+    position: relative;
+  }
+  .col li::before { content: '→'; position: absolute; left: 0; color: var(--amber); }
+
+  @media (max-width: 980px) {
+    .bridge-grid { grid-template-rows: 160px auto auto; }
+    .bridge-columns { grid-template-columns: 1fr; }
+    .telenet-quote { flex-direction: column; align-items: flex-start; gap: 0.6rem; }
+    .telenet-quote .q-attr { padding-left: 0; border-left: none; }
+  }
+</style>
+</head>
+<body>
+
+<canvas class="bg-canvas" id="dust"></canvas>
+
+<nav class="topnav">
+  <div class="logo">
+    <span class="a">Adobe</span>
+    <span class="sep">/</span>
+    <span>Experience Modernization Agent</span>
+  </div>
+  <div class="slide-counter">SLIDE · 6 / 8</div>
+  <div class="topnav-actions">
+    <a class="nav-link" href="06-reception.html">← Prev</a>
+    <a class="nav-link" href="04b-slicc.html">Next →</a>
+  </div>
+</nav>
+
+<aside class="side-dots">
+  <a href="index.html" data-label="Cover"></a>
+  <a href="01-anatomy.html" data-label="1. Anatomy"></a>
+  <a href="02-jobs.html" data-label="2. Jobs"></a>
+  <a href="05-adoption.html" data-label="3. Adoption"></a>
+  <a href="03-funnel.html" data-label="4. PLG funnel"></a>
+  <a href="06-reception.html" data-label="5. Reception"></a>
+  <a href="04-bridge.html" class="current" data-label="6. Bridge"></a>
+  <a href="04b-slicc.html" data-label="7. SLICC"></a>
+  <a href="07-lab.html" data-label="8. Lab"></a>
+</aside>
+
+<main>
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow bridge-eyebrow reveal">06 · BRIDGE TO THE AGENT-NATIVE WORLD</div>
+      <h1 class="slide-title bridge-title reveal reveal-1">
+        EMA is a <span class="serif">bridge</span>, not a <span class="accent">destination.</span>
+      </h1>
+      <p class="slide-sub reveal reveal-2">
+        Every partner of any size is building an agent platform. Adobe is alone in the closed-DXP camp.
+        EMA is how we walk customers across — without forcing the leap in one step.
+      </p>
+
+      <div class="bridge-grid">
+        <!-- Bridge visual -->
+        <div class="bridge-stage reveal reveal-3">
+          <div class="island-label left">
+            Today
+            <span class="big">Closed DXP</span>
+          </div>
+          <div class="island-label right">
+            Tomorrow
+            <span class="big">Agent-native</span>
+          </div>
+
+          <div class="bridge-line"></div>
+          <div class="pulse"></div>
+          <div class="pulse"></div>
+          <div class="pulse"></div>
+          <div class="pulse"></div>
+          <div class="pulse"></div>
+          <div class="pulse"></div>
+
+          <div class="keystone k1">aemcoder</div>
+          <div class="keystone k2">SLICC</div>
+          <div class="keystone k3">skills</div>
+          <div class="keystone k4">primitives</div>
+        </div>
+
+        <!-- Telenet quote -->
+        <div class="telenet-quote reveal reveal-4">
+          <div class="q-text">
+            How is this <strong>different</strong> from Claude Code? We just spent 15 minutes
+            setting up Edge Delivery Services from scratch with our own AI.
+          </div>
+          <div class="q-attr">— Telenet · technical lead<br>April 2026</div>
+        </div>
+
+        <!-- 3 columns -->
+        <div class="bridge-columns reveal reveal-5">
+          <div class="col">
+            <h4>The Signal</h4>
+            <div class="head">Partners aren't waiting.</div>
+            <p>Accenture · Cognizant · Infosys · Wipro · Publicis · KPMG · Deloitte — each shipping their own agent platform.</p>
+            <ul>
+              <li>Accenture PBYB POC</li>
+              <li>Asian Paints · cross-agent</li>
+              <li>Telenet · 15 min EDS</li>
+            </ul>
+          </div>
+          <div class="col">
+            <h4>The Bridge</h4>
+            <div class="head">Three layers, one continuum.</div>
+            <p>EMA today = <strong>L3 agent</strong>. SLICC + skills = <strong>L2</strong>. Adobe primitives = <strong>L1</strong>. Customers can pick where to enter.</p>
+            <ul>
+              <li>L3 → managed agent</li>
+              <li>L2 → bring your own</li>
+              <li>L1 → integrate primitives</li>
+            </ul>
+          </div>
+          <div class="col">
+            <h4>The Position</h4>
+            <div class="head">Open beats closed.</div>
+            <p>We don't compete with partner agents. We make Adobe the <strong>platform layer</strong> they reach for, like every browser reaches for the web platform.</p>
+            <ul>
+              <li>github.com/adobe/skills public</li>
+              <li>SLICC works in any browser</li>
+              <li>aemcoder = example, not moat</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="slide-foot">
+  <a href="06-reception.html">← Prev</a>
+  <a href="04b-slicc.html">Next →</a>
+</div>
+
+<script src="assets/effects.js"></script>
+<script>
+  startStarfield('dust', { density: 0.5, color1: '#FFD98A', color2: '#c9822d', color3: '#5fd4ff', drift: 0.02 });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') location.href = '04b-slicc.html';
+    if (e.key === 'ArrowLeft') location.href = '06-reception.html';
+  });
+</script>
+
+</body>
+</html>

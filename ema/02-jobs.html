@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>02 · Jobs · EMA</title>
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+  body {
+    background:
+      radial-gradient(ellipse at 90% 0%, rgba(255, 61, 0, 0.07) 0%, transparent 55%),
+      radial-gradient(ellipse at 0% 100%, rgba(0, 229, 160, 0.04) 0%, transparent 55%),
+      var(--of1-bg);
+    color: var(--of1-text);
+  }
+  .jobs-bg-num {
+    position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic; font-weight: 600;
+    font-size: clamp(20rem, 36vw, 36rem); line-height: 0.85;
+    color: var(--of1-orange); opacity: 0.04; user-select: none;
+    pointer-events: none; z-index: 0;
+  }
+
+  .jobs-eyebrow { color: var(--of1-orange); }
+  .jobs-title .accent {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500; font-style: italic; color: var(--of1-orange);
+  }
+
+  .jobs-grid {
+    display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr;
+    gap: 1px; flex: 1; min-height: 0;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+  }
+  .job-card {
+    background: var(--of1-bg);
+    padding: 1rem 1.2rem; position: relative; overflow: hidden;
+    display: flex; flex-direction: column;
+    transition: background 0.3s;
+  }
+  .job-card:hover { background: rgba(255, 61, 0, 0.04); }
+  .job-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem; letter-spacing: 0.18em; color: var(--of1-orange);
+  }
+  .job-title {
+    font-family: 'Inter', sans-serif;
+    font-weight: 800; font-size: 1.4rem;
+    letter-spacing: -0.02em; color: var(--of1-text);
+    margin: 0.2rem 0 0.3rem;
+  }
+  .job-desc {
+    font-size: 0.78rem; color: rgba(245, 240, 232, 0.62);
+    line-height: 1.45; max-width: 90%;
+  }
+  .job-stage {
+    margin-top: 0.6rem; flex: 1; min-height: 0;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+
+  /* ── Card 1: Migrate · counter + bar ── */
+  .mig-stage { flex-direction: column; align-items: stretch; padding: 0.4rem 0.2rem; gap: 0.5rem; }
+  .mig-counters { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+  .mig-counter {
+    background: rgba(255, 61, 0, 0.06);
+    border: 1px solid rgba(255, 61, 0, 0.18);
+    padding: 0.55rem 0.7rem; border-radius: 4px;
+  }
+  .mig-counter .lbl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.55rem; letter-spacing: 0.16em;
+    color: rgba(245, 240, 232, 0.55); text-transform: uppercase;
+  }
+  .mig-counter .val {
+    font-family: 'Inter', sans-serif;
+    font-weight: 800; font-size: 1.6rem; line-height: 1;
+    color: var(--of1-orange); letter-spacing: -0.03em;
+  }
+  .mig-bar {
+    height: 6px; background: rgba(255, 255, 255, 0.05); border-radius: 3px; overflow: hidden;
+  }
+  .mig-bar .fill {
+    height: 100%; background: linear-gradient(90deg, var(--of1-orange), #ffaa66);
+    width: 0; transition: width 1.6s 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .mig-bar.go .fill { width: 100%; }
+  .mig-foot {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.62rem;
+    color: rgba(245, 240, 232, 0.55); text-align: center;
+  }
+
+  /* ── Card 2: Redesign · before/after slider ── */
+  .ba-wrap {
+    position: relative; width: 100%; height: 100%;
+    border-radius: 4px; overflow: hidden; cursor: ew-resize;
+    background: rgba(0, 0, 0, 0.4); user-select: none;
+  }
+  .ba-pane { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 0.3rem; }
+  .ba-before {
+    background: linear-gradient(135deg, #2a2a2a 0%, #3a3a3a 100%);
+    color: rgba(245, 240, 232, 0.5);
+  }
+  .ba-after {
+    background: linear-gradient(135deg, var(--of1-orange) 0%, #ff7040 100%);
+    color: #fff; clip-path: inset(0 0 0 50%);
+  }
+  .ba-pane .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.58rem; letter-spacing: 0.18em;
+    text-transform: uppercase; opacity: 0.85;
+  }
+  .ba-pane .heading {
+    font-family: 'Inter', sans-serif;
+    font-weight: 800; font-size: 1.5rem;
+    letter-spacing: -0.02em;
+  }
+  .ba-after .heading { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 500; }
+  .ba-handle {
+    position: absolute; top: 0; bottom: 0; left: 50%;
+    width: 2px; background: #fff; transform: translateX(-1px);
+    pointer-events: none; box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+  }
+  .ba-handle::before {
+    content: '⇆'; position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 26px; height: 26px; border-radius: 50%;
+    background: #fff; color: #1c1917;
+    font-size: 0.85rem; line-height: 26px; text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  }
+
+  /* ── Card 3: Build · block snap ── */
+  .blk-stage {
+    background: rgba(0, 0, 0, 0.3); border-radius: 4px;
+    width: 100%; height: 100%; position: relative; overflow: hidden;
+  }
+  .blk-piece {
+    position: absolute; padding: 0.4rem 0.7rem;
+    background: rgba(0, 229, 160, 0.08);
+    border: 1px solid rgba(0, 229, 160, 0.3);
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.66rem; color: var(--of1-mint);
+    opacity: 0; transform: translateX(-160%) rotate(-20deg);
+    animation: blkSnap 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+  .blk-piece.b1 { top: 16%; left: 10%; animation-delay: 0.4s; }
+  .blk-piece.b2 { top: 30%; right: 12%; transform: translateX(160%) rotate(20deg); animation-delay: 0.7s; }
+  .blk-piece.b3 { bottom: 26%; left: 14%; transform: translateY(160%) rotate(20deg); animation-delay: 1s; }
+  .blk-piece.b4 { bottom: 12%; right: 10%; transform: translateY(160%) rotate(-20deg); animation-delay: 1.3s; }
+  @keyframes blkSnap { to { opacity: 1; transform: translate(0, 0) rotate(0); } }
+  .blk-axis {
+    position: absolute; left: 50%; top: 5%; bottom: 5%;
+    width: 1px; background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+  }
+
+  /* ── Card 4: Generate · brief→wireframe ── */
+  .gen-stage {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 0.6rem; width: 100%; height: 100%;
+  }
+  .gen-pane {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 4px; padding: 0.6rem 0.7rem;
+    overflow: hidden;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.66rem;
+  }
+  .gen-pane.left { color: var(--of1-mint); }
+  .gen-pane.right {
+    display: flex; flex-direction: column; gap: 6px;
+    justify-content: center; align-items: stretch;
+  }
+  .gen-pane .tw-cursor { color: var(--of1-mint); }
+  .wire-h1 { height: 16px; background: linear-gradient(90deg, rgba(255,61,0,0.5), transparent); border-radius: 2px; opacity: 0; animation: wireIn 0.5s 1.2s ease forwards; }
+  .wire-txt { height: 5px; background: rgba(255, 255, 255, 0.1); border-radius: 2px; opacity: 0; animation: wireIn 0.5s 1.5s ease forwards; }
+  .wire-txt-2 { height: 5px; width: 70%; background: rgba(255, 255, 255, 0.1); border-radius: 2px; opacity: 0; animation: wireIn 0.5s 1.8s ease forwards; }
+  .wire-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px; opacity: 0; animation: wireIn 0.5s 2.1s ease forwards; }
+  .wire-row > div { height: 30px; background: rgba(0, 229, 160, 0.08); border: 1px solid rgba(0, 229, 160, 0.18); border-radius: 3px; }
+  @keyframes wireIn { to { opacity: 1; } }
+
+  @media (max-width: 760px) {
+    .jobs-grid { grid-template-columns: 1fr; grid-template-rows: repeat(4, minmax(0, 1fr)); }
+  }
+</style>
+</head>
+<body>
+
+<div class="jobs-bg-num reveal">4</div>
+
+<nav class="topnav">
+  <div class="logo">
+    <span class="a">Adobe</span>
+    <span class="sep">/</span>
+    <span>Experience Modernization Agent</span>
+  </div>
+  <div class="slide-counter">SLIDE · 2 / 8</div>
+  <div class="topnav-actions">
+    <a class="nav-link" href="01-anatomy.html">← Prev</a>
+    <a class="nav-link" href="05-adoption.html">Next →</a>
+  </div>
+</nav>
+
+<aside class="side-dots">
+  <a href="index.html" data-label="Cover"></a>
+  <a href="01-anatomy.html" data-label="1. Anatomy"></a>
+  <a href="02-jobs.html" class="current" data-label="2. Jobs"></a>
+  <a href="05-adoption.html" data-label="3. Adoption"></a>
+  <a href="03-funnel.html" data-label="4. PLG funnel"></a>
+  <a href="06-reception.html" data-label="5. Reception"></a>
+  <a href="04-bridge.html" data-label="6. Bridge"></a>
+  <a href="04b-slicc.html" data-label="7. SLICC"></a>
+  <a href="07-lab.html" data-label="8. Lab"></a>
+</aside>
+
+<main>
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow jobs-eyebrow reveal">02 · USE CASES</div>
+      <h1 class="slide-title jobs-title reveal reveal-1">
+        Four jobs. <span class="accent">One agent.</span>
+      </h1>
+      <p class="slide-sub reveal reveal-2">
+        EMA does four things end-to-end. Migration is the volume play. The other three are how customers stop seeing it as a one-off tool.
+      </p>
+
+      <div class="jobs-grid reveal reveal-3">
+        <!-- 01 Migrate -->
+        <div class="job-card">
+          <div class="job-num">JOB 01 · MIGRATE 1:1</div>
+          <div class="job-title">Lift &amp; modernize.</div>
+          <div class="job-desc">Existing site → Edge Delivery Services. Pages, design, accessibility preserved.</div>
+          <div class="job-stage mig-stage">
+            <div class="mig-counters">
+              <div class="mig-counter">
+                <div class="lbl">Pages · anchor case</div>
+                <div class="val" data-count="2000" data-suffix="" data-duration="1600">0</div>
+              </div>
+              <div class="mig-counter">
+                <div class="lbl">Weeks</div>
+                <div class="val" data-count="4" data-suffix="" data-duration="900">0</div>
+              </div>
+            </div>
+            <div class="mig-bar" id="migBar"><div class="fill"></div></div>
+            <div class="mig-foot">previously: ~6 months · partner-led</div>
+          </div>
+        </div>
+
+        <!-- 02 Redesign -->
+        <div class="job-card">
+          <div class="job-num">JOB 02 · REDESIGN</div>
+          <div class="job-title">Refresh, don't rebuild.</div>
+          <div class="job-desc">Same content, new design system. Drag the slider.</div>
+          <div class="job-stage">
+            <div class="ba-wrap" id="baWrap">
+              <div class="ba-pane ba-before">
+                <span class="label">before</span>
+                <span class="heading">Tired template</span>
+              </div>
+              <div class="ba-pane ba-after" id="baAfter">
+                <span class="label">after</span>
+                <span class="heading">on brand.</span>
+              </div>
+              <div class="ba-handle" id="baHandle"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 03 Build -->
+        <div class="job-card">
+          <div class="job-num">JOB 03 · BUILD BLOCKS</div>
+          <div class="job-title">New block in minutes.</div>
+          <div class="job-desc">Custom block scaffolded, styled, tested — straight into the codebase.</div>
+          <div class="job-stage">
+            <div class="blk-stage">
+              <div class="blk-axis"></div>
+              <div class="blk-piece b1">.hero { … }</div>
+              <div class="blk-piece b2">@media (max-width)</div>
+              <div class="blk-piece b3">decorate(block)</div>
+              <div class="blk-piece b4">// block.css</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 04 Generate -->
+        <div class="job-card">
+          <div class="job-num">JOB 04 · GENERATE</div>
+          <div class="job-title">From brief to live.</div>
+          <div class="job-desc">A markdown brief becomes a structured site. Reviewed, then shipped.</div>
+          <div class="job-stage">
+            <div class="gen-stage">
+              <div class="gen-pane left" id="genTerm"
+                   data-lines='[
+                     "# product brief",
+                     "name: Aurora",
+                     "voice: warm, curious",
+                     "sections: hero, story, sign-up"
+                   ]'
+                   data-char-delay="22" data-line-delay="180" data-loop="1"></div>
+              <div class="gen-pane right">
+                <div class="wire-h1"></div>
+                <div class="wire-txt"></div>
+                <div class="wire-txt-2"></div>
+                <div class="wire-row"><div></div><div></div><div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="slide-foot">
+  <a href="01-anatomy.html">← Prev</a>
+  <a href="05-adoption.html">Next →</a>
+</div>
+
+<script src="assets/effects.js"></script>
+<script>
+  // Trigger migrate bar fill on view
+  const migBar = document.getElementById('migBar');
+  if (migBar) setTimeout(() => migBar.classList.add('go'), 800);
+
+  // Before/After slider
+  const wrap = document.getElementById('baWrap');
+  const handle = document.getElementById('baHandle');
+  const after = document.getElementById('baAfter');
+  let dragging = false;
+  function setPos(clientX) {
+    const rect = wrap.getBoundingClientRect();
+    let x = (clientX - rect.left) / rect.width;
+    x = Math.max(0.05, Math.min(0.95, x));
+    handle.style.left = (x * 100) + '%';
+    after.style.clipPath = `inset(0 0 0 ${x * 100}%)`;
+  }
+  wrap.addEventListener('mousedown', e => { dragging = true; setPos(e.clientX); });
+  document.addEventListener('mousemove', e => { if (dragging) setPos(e.clientX); });
+  document.addEventListener('mouseup', () => dragging = false);
+  wrap.addEventListener('touchstart', e => { dragging = true; setPos(e.touches[0].clientX); }, { passive: true });
+  wrap.addEventListener('touchmove', e => { if (dragging) setPos(e.touches[0].clientX); }, { passive: true });
+  wrap.addEventListener('touchend', () => dragging = false);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') location.href = '05-adoption.html';
+    if (e.key === 'ArrowLeft') location.href = '01-anatomy.html';
+  });
+</script>
+
+</body>
+</html>

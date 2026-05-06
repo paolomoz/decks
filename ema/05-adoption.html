@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>03 · Adoption · EMA</title>
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+  body {
+    background:
+      radial-gradient(ellipse at 70% 0%, rgba(235, 16, 0, 0.13) 0%, transparent 55%),
+      linear-gradient(180deg, #0a0a0a 0%, #1a0808 100%);
+  }
+
+  .adopt-eyebrow { color: var(--red2); }
+  .adopt-title .accent { color: var(--red2); text-shadow: 0 0 20px rgba(235, 16, 0, 0.3); }
+
+  /* Ticker bar */
+  .ticker-bar {
+    background: rgba(235, 16, 0, 0.05);
+    border: 1px solid rgba(235, 16, 0, 0.18);
+    border-left: none; border-right: none;
+    overflow: hidden; white-space: nowrap;
+    padding: 0.45rem 0;
+    margin: 0.6rem -2rem 1rem;
+    position: relative;
+  }
+  .ticker-bar::before, .ticker-bar::after {
+    content: ''; position: absolute; top: 0; bottom: 0; width: 60px; z-index: 2;
+  }
+  .ticker-bar::before { left: 0; background: linear-gradient(90deg, var(--ink), transparent); }
+  .ticker-bar::after { right: 0; background: linear-gradient(-90deg, var(--ink), transparent); }
+  .ticker-track { display: inline-flex; gap: 2.4rem; animation: tickScroll 60s linear infinite; }
+  @keyframes tickScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  .tick { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--dust-dim); letter-spacing: 0.05em; }
+  .tick .symbol { color: var(--red2); margin-right: 0.4rem; font-weight: 700; }
+  .tick .num { color: var(--dust); font-weight: 700; }
+  .tick .delta-up { color: #28d278; margin-left: 0.35rem; }
+
+  .adopt-grid {
+    display: grid; grid-template-columns: 1.05fr 0.95fr;
+    grid-template-rows: auto 1fr; gap: 1rem;
+    flex: 1; min-height: 0;
+  }
+
+  /* Hero metrics */
+  .hero-metrics {
+    grid-column: span 2;
+    display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 0;
+    background: rgba(235, 16, 0, 0.07);
+    border: 1px solid rgba(235, 16, 0, 0.18);
+  }
+  .hm-cell {
+    padding: 0.85rem 1.1rem;
+    border-right: 1px solid rgba(235, 16, 0, 0.12);
+  }
+  .hm-cell:last-child { border-right: none; }
+  .hm-cell.lead { background: linear-gradient(135deg, rgba(235, 16, 0, 0.16), rgba(255, 51, 32, 0.05)); }
+  .hm-cell .lbl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.55rem; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--dust-faint); margin-bottom: 0.3rem;
+  }
+  .hm-cell .val {
+    font-family: 'Inter', sans-serif;
+    font-weight: 800; font-size: clamp(1.4rem, 2.4vw, 2.1rem);
+    line-height: 1; letter-spacing: -0.04em;
+    color: var(--dust);
+  }
+  .hm-cell.lead .val {
+    background: linear-gradient(135deg, var(--red2), var(--red));
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+  }
+  .hm-cell .sub { font-size: 0.7rem; color: var(--dust-dim); margin-top: 0.25rem; }
+  .hm-cell .sub strong { color: var(--red2); }
+
+  /* Chart */
+  .chart-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 0.9rem 1rem; display: flex; flex-direction: column;
+  }
+  .chart-card h3 {
+    font-size: 0.84rem; font-weight: 700; color: var(--dust);
+    margin-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: baseline;
+  }
+  .chart-card h3 .delta { font-size: 0.7rem; color: #28d278; font-family: 'JetBrains Mono', monospace; }
+  .chart-svg { width: 100%; flex: 1; min-height: 0; }
+
+  /* Brands */
+  .brands-card { padding: 0.9rem 1rem; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.06); display: flex; flex-direction: column; }
+  .brands-card h3 { font-size: 0.84rem; font-weight: 700; color: var(--dust); margin-bottom: 0.5rem; }
+  .brand-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem; flex: 1; align-content: start; }
+  .brand-pin {
+    display: flex; align-items: center; gap: 0.55rem;
+    padding: 0.4rem 0.6rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 3px; font-size: 0.75rem;
+    transition: all 0.2s;
+  }
+  .brand-pin:hover { background: rgba(235, 16, 0, 0.08); }
+  .brand-pin .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--red2); box-shadow: 0 0 6px var(--red2); flex-shrink: 0; }
+  .brand-pin .name { color: var(--dust); font-weight: 600; }
+  .brand-pin .info { color: var(--dust-faint); margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; }
+
+  /* Patterns row at bottom */
+  .patterns {
+    grid-column: span 2;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+    background: rgba(235, 16, 0, 0.15);
+    border: 1px solid rgba(235, 16, 0, 0.15);
+  }
+  .pat {
+    padding: 0.7rem 0.9rem;
+    background: rgba(10, 10, 10, 0.85);
+  }
+  .pat h4 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.55rem; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--red2); margin-bottom: 0.35rem;
+  }
+  .pat .head {
+    font-size: 0.95rem; font-weight: 700; color: var(--dust);
+    margin-bottom: 0.35rem; line-height: 1.25;
+  }
+  .pat p { font-size: 0.74rem; color: var(--dust-dim); line-height: 1.45; }
+  .pat p strong { color: var(--dust); }
+
+  @media (max-width: 980px) {
+    .adopt-grid { grid-template-columns: 1fr; }
+    .hero-metrics { grid-template-columns: 1fr 1fr; }
+    .patterns { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="logo">
+    <span class="a">Adobe</span>
+    <span class="sep">/</span>
+    <span>Experience Modernization Agent</span>
+  </div>
+  <div class="slide-counter">SLIDE · 3 / 8</div>
+  <div class="topnav-actions">
+    <a class="nav-link" href="02-jobs.html">← Prev</a>
+    <a class="nav-link" href="03-funnel.html">Next →</a>
+  </div>
+</nav>
+
+<aside class="side-dots">
+  <a href="index.html" data-label="Cover"></a>
+  <a href="01-anatomy.html" data-label="1. Anatomy"></a>
+  <a href="02-jobs.html" data-label="2. Jobs"></a>
+  <a href="05-adoption.html" class="current" data-label="3. Adoption"></a>
+  <a href="03-funnel.html" data-label="4. PLG funnel"></a>
+  <a href="06-reception.html" data-label="5. Reception"></a>
+  <a href="04-bridge.html" data-label="6. Bridge"></a>
+  <a href="04b-slicc.html" data-label="7. SLICC"></a>
+  <a href="07-lab.html" data-label="8. Lab"></a>
+</aside>
+
+<main>
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow adopt-eyebrow reveal">03 · ADOPTION · WHO USES IT, AT WHAT SCALE</div>
+      <h1 class="slide-title adopt-title reveal reveal-1">
+        Real customers. <span class="accent">Real production.</span>
+      </h1>
+
+      <!-- Live ticker -->
+      <div class="ticker-bar reveal reveal-2">
+        <div class="ticker-track">
+          <span class="tick"><span class="symbol">DOMAINS</span><span class="num">300+</span><span class="delta-up">▲ +18 / 30d</span></span>
+          <span class="tick"><span class="symbol">BRANDS</span><span class="num">10</span><span class="delta-up">▲ +2</span></span>
+          <span class="tick"><span class="symbol">VALUE</span><span class="num">$2.65M</span><span class="delta-up">▲ +$340K</span></span>
+          <span class="tick"><span class="symbol">FIDELITY</span><span class="num">88%</span><span class="delta-up">▲ +6pt</span></span>
+          <span class="tick"><span class="symbol">LIGHTHOUSE</span><span class="num">98</span><span class="delta-up">▲ +3</span></span>
+          <span class="tick"><span class="symbol">ANCHOR</span><span class="num">~2K pages · 4 weeks</span></span>
+          <span class="tick"><span class="symbol">DOMAINS</span><span class="num">300+</span><span class="delta-up">▲ +18 / 30d</span></span>
+          <span class="tick"><span class="symbol">BRANDS</span><span class="num">10</span><span class="delta-up">▲ +2</span></span>
+          <span class="tick"><span class="symbol">VALUE</span><span class="num">$2.65M</span><span class="delta-up">▲ +$340K</span></span>
+          <span class="tick"><span class="symbol">FIDELITY</span><span class="num">88%</span><span class="delta-up">▲ +6pt</span></span>
+          <span class="tick"><span class="symbol">LIGHTHOUSE</span><span class="num">98</span><span class="delta-up">▲ +3</span></span>
+          <span class="tick"><span class="symbol">ANCHOR</span><span class="num">~2K pages · 4 weeks</span></span>
+        </div>
+      </div>
+
+      <div class="adopt-grid">
+        <!-- Hero metrics row -->
+        <div class="hero-metrics reveal reveal-3">
+          <div class="hm-cell lead">
+            <div class="lbl">Customer value generated</div>
+            <div class="val" data-prefix="$" data-count="2.65" data-decimals="2" data-suffix="M" data-duration="1800">$0M</div>
+            <div class="sub">measured at avg page rebuild cost</div>
+          </div>
+          <div class="hm-cell">
+            <div class="lbl">Domains</div>
+            <div class="val" data-count="300" data-suffix="+" data-duration="1500">0</div>
+            <div class="sub">across 10 brand portfolios</div>
+          </div>
+          <div class="hm-cell">
+            <div class="lbl">Anchor case</div>
+            <div class="val" data-count="2000" data-duration="1700">0</div>
+            <div class="sub">pages · <strong>4 weeks</strong> · global airline</div>
+          </div>
+          <div class="hm-cell">
+            <div class="lbl">Fidelity / Lighthouse</div>
+            <div class="val">88<span style="font-size: 0.55em; color: var(--dust-dim);">%</span> · 98</div>
+            <div class="sub">vs source · perf score</div>
+          </div>
+        </div>
+
+        <!-- Chart -->
+        <div class="chart-card reveal reveal-4">
+          <h3>
+            <span>Cumulative production sites · 6 months</span>
+            <span class="delta">▲ +94% vs Q4</span>
+          </h3>
+          <svg class="chart-svg" viewBox="0 0 600 180" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="growthFill" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0%" stop-color="#ff3320" stop-opacity="0.45"/>
+                <stop offset="100%" stop-color="#ff3320" stop-opacity="0"/>
+              </linearGradient>
+              <linearGradient id="growthLine" x1="0" x2="1" y1="0" y2="0">
+                <stop offset="0%" stop-color="#eb1000"/>
+                <stop offset="100%" stop-color="#ff6047"/>
+              </linearGradient>
+            </defs>
+            <g stroke="rgba(255,255,255,0.05)">
+              <line x1="0" y1="45" x2="600" y2="45"/>
+              <line x1="0" y1="90" x2="600" y2="90"/>
+              <line x1="0" y1="135" x2="600" y2="135"/>
+            </g>
+            <path d="M0,160 L0,158 L100,148 L200,128 L300,100 L400,68 L500,36 L600,12 L600,180 L0,180 Z" fill="url(#growthFill)"/>
+            <path d="M0,158 L100,148 L200,128 L300,100 L400,68 L500,36 L600,12"
+                  stroke="url(#growthLine)" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            <g fill="#ff3320">
+              <circle cx="0" cy="158" r="3"/>
+              <circle cx="100" cy="148" r="3"/>
+              <circle cx="200" cy="128" r="3"/>
+              <circle cx="300" cy="100" r="3"/>
+              <circle cx="400" cy="68" r="3"/>
+              <circle cx="500" cy="36" r="3"/>
+              <circle cx="600" cy="12" r="4" stroke="#fff" stroke-width="1"/>
+            </g>
+            <g fill="rgba(245,240,230,0.4)" font-family="JetBrains Mono" font-size="9" text-anchor="middle">
+              <text x="0" y="175">Nov</text>
+              <text x="100" y="175">Dec</text>
+              <text x="200" y="175">Jan</text>
+              <text x="300" y="175">Feb</text>
+              <text x="400" y="175">Mar</text>
+              <text x="500" y="175">Apr</text>
+              <text x="570" y="175">May</text>
+            </g>
+          </svg>
+        </div>
+
+        <!-- Brands -->
+        <div class="brands-card reveal reveal-5">
+          <h3>Anchor brands shipping at scale</h3>
+          <div class="brand-grid">
+            <div class="brand-pin"><span class="dot"></span><span class="name">Global airline</span><span class="info">~2K pgs · 4w</span></div>
+            <div class="brand-pin"><span class="dot"></span><span class="name">Luxury goods</span><span class="info">multi-region</span></div>
+            <div class="brand-pin"><span class="dot"></span><span class="name">Consumer goods</span><span class="info">88% fidelity</span></div>
+            <div class="brand-pin"><span class="dot"></span><span class="name">Pharma · global</span><span class="info">&lt;5min/page</span></div>
+            <div class="brand-pin"><span class="dot"></span><span class="name">SocGen / Valtech</span><span class="info">400 pgs</span></div>
+            <div class="brand-pin"><span class="dot"></span><span class="name">Asian Paints</span><span class="info">cross-agent</span></div>
+            <div class="brand-pin"><span class="dot"></span><span class="name">Telenet</span><span class="info">EU pilot</span></div>
+            <div class="brand-pin"><span class="dot"></span><span class="name">+3 under NDA</span><span class="info">FY26</span></div>
+          </div>
+        </div>
+
+        <!-- Patterns -->
+        <div class="patterns reveal reveal-6">
+          <div class="pat">
+            <h4>Pattern 01 · who</h4>
+            <div class="head">Partners drive volume.</div>
+            <p><strong>~70%</strong> of shipped work goes through SI partners. They know the customer. We provide the multiplier.</p>
+          </div>
+          <div class="pat">
+            <h4>Pattern 02 · what</h4>
+            <div class="head">Migrations dominate.</div>
+            <p><strong>82%</strong> of jobs are 1:1 migrations to Edge Delivery Services. Redesign and ground-up generation are growing — small but real.</p>
+          </div>
+          <div class="pat">
+            <h4>Pattern 03 · when</h4>
+            <div class="head">Mid-quarter ramps.</div>
+            <p>Activity peaks weeks <strong>4-7</strong> of every quarter. We schedule office hours, demos, and templates to that rhythm now.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="slide-foot">
+  <a href="02-jobs.html">← Prev</a>
+  <a href="03-funnel.html">Next →</a>
+</div>
+
+<script src="assets/effects.js"></script>
+<script>
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') location.href = '03-funnel.html';
+    if (e.key === 'ArrowLeft') location.href = '02-jobs.html';
+  });
+</script>
+
+</body>
+</html>

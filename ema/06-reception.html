@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>05 · Reception · EMA</title>
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+  body { background: var(--editorial-cream); color: var(--editorial-ink); }
+  .topnav { background: rgba(244, 237, 226, 0.85); border-bottom: 1px solid rgba(20, 17, 13, 0.1); }
+  .topnav .logo .a { color: var(--editorial-red); }
+  .topnav .logo, .slide-counter { color: var(--editorial-ink); }
+  .nav-link { color: var(--editorial-ink); border-color: rgba(20, 17, 13, 0.2); }
+  .nav-link:hover { color: var(--editorial-red); border-color: var(--editorial-red); background: rgba(193, 25, 25, 0.05); }
+  .side-dots a { background: rgba(20, 17, 13, 0.18); }
+  .side-dots a.current { background: var(--editorial-red); box-shadow: 0 0 12px var(--editorial-red); }
+  .side-dots a::after { background: var(--editorial-ink); color: var(--editorial-cream); border-color: transparent; }
+  .slide-foot a { background: rgba(244, 237, 226, 0.95); color: var(--editorial-ink); border-color: rgba(20, 17, 13, 0.15); }
+  .slide-foot a:hover { color: var(--editorial-red); border-color: var(--editorial-red); }
+
+  .ed-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.66rem; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--editorial-red); margin-bottom: 0.6rem;
+    padding-bottom: 0.4rem; border-bottom: 1px solid rgba(20, 17, 13, 0.15);
+    display: flex; justify-content: space-between; align-items: baseline;
+  }
+  .ed-eyebrow .ed-meta { color: rgba(20, 17, 13, 0.5); font-size: 0.6rem; }
+
+  .ed-headline {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600; font-size: clamp(2.2rem, 5vw, 4.2rem);
+    line-height: 1; letter-spacing: -0.025em;
+    color: var(--editorial-ink); margin-bottom: 0.4rem;
+  }
+  .ed-headline .italic { font-style: italic; color: var(--editorial-red); font-weight: 500; }
+  .ed-deck {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic; font-size: clamp(0.95rem, 1.4vw, 1.2rem);
+    color: rgba(20, 17, 13, 0.7); max-width: 760px; line-height: 1.4;
+    margin-bottom: 0.8rem;
+  }
+  .byline {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase;
+    color: rgba(20, 17, 13, 0.55); margin-bottom: 0.8rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--editorial-ink);
+  }
+
+  .recep-grid {
+    display: grid; grid-template-columns: 1fr 1.4fr; gap: 1.2rem;
+    flex: 1; min-height: 0; align-items: stretch;
+  }
+
+  /* Gauges column */
+  .gauges-col {
+    display: grid; grid-template-rows: 1fr 1fr; gap: 0.8rem; min-height: 0;
+  }
+  .gauge-card {
+    border: 1px solid rgba(20, 17, 13, 0.15);
+    background: rgba(255, 255, 255, 0.4);
+    padding: 0.8rem 1rem;
+    display: flex; flex-direction: column; align-items: stretch;
+    min-height: 0;
+  }
+  .gauge-card .g-lbl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.56rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: rgba(20, 17, 13, 0.6); margin-bottom: 0.3rem;
+  }
+  .gauge-card .g-h {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem; font-weight: 600; color: var(--editorial-ink);
+    margin-bottom: 0.4rem; line-height: 1.2;
+  }
+  .gauge-card .g-h em { color: var(--editorial-red); font-style: italic; }
+  .gauge-row { display: flex; align-items: center; gap: 1rem; flex: 1; min-height: 0; }
+  .gauge-svg-wrap { position: relative; width: 130px; height: 80px; flex-shrink: 0; }
+  .gauge-svg { width: 100%; height: 100%; }
+  .g-val {
+    position: absolute; bottom: 0; left: 0; right: 0; text-align: center;
+    font-family: 'Inter', sans-serif;
+    font-weight: 800; font-size: 1.5rem; letter-spacing: -0.04em;
+  }
+  .gauge-card.high .g-val { color: var(--editorial-ink); }
+  .gauge-card.low .g-val { color: var(--editorial-red); }
+  .g-cap {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.65rem;
+    color: rgba(20, 17, 13, 0.55); letter-spacing: 0.06em;
+    line-height: 1.4;
+  }
+
+  /* Story block */
+  .story-block {
+    background: var(--editorial-ink); color: var(--editorial-cream);
+    padding: 1rem 1.3rem;
+    display: flex; flex-direction: column; min-height: 0;
+  }
+  .story-block .s-eye {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.58rem; letter-spacing: 0.22em; text-transform: uppercase;
+    color: rgba(244, 237, 226, 0.6); margin-bottom: 0.4rem;
+  }
+  .story-block .s-head {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem; font-weight: 500; line-height: 1.15;
+    margin-bottom: 0.7rem;
+  }
+  .story-block .s-head em { color: var(--amber); font-style: italic; }
+
+  .timeline {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+    margin: 0.4rem 0; position: relative;
+  }
+  .timeline::before {
+    content: ''; position: absolute; left: 5%; right: 5%; top: 16px;
+    height: 2px; background: rgba(244, 237, 226, 0.2);
+  }
+  .tl-step { text-align: center; position: relative; padding-top: 36px; }
+  .tl-step .dot {
+    position: absolute; top: 9px; left: 50%; transform: translateX(-50%);
+    width: 14px; height: 14px; border-radius: 50%;
+    background: var(--editorial-cream); border: 3px solid var(--editorial-ink);
+    box-shadow: 0 0 0 2px rgba(244, 237, 226, 0.4);
+  }
+  .tl-step.done .dot { background: var(--amber); }
+  .tl-step.now .dot { background: var(--editorial-red); animation: pulseRed 1.6s ease-in-out infinite; }
+  @keyframes pulseRed {
+    0%, 100% { box-shadow: 0 0 0 2px rgba(193, 25, 25, 0.5); }
+    50% { box-shadow: 0 0 0 6px rgba(193, 25, 25, 0); }
+  }
+  .tl-step .when {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.56rem; letter-spacing: 0.14em; text-transform: uppercase;
+    color: rgba(244, 237, 226, 0.5); margin-bottom: 0.2rem;
+  }
+  .tl-step .ttl { font-weight: 700; font-size: 0.78rem; color: var(--editorial-cream); margin-bottom: 0.15rem; }
+  .tl-step .desc { font-size: 0.66rem; color: rgba(244, 237, 226, 0.6); line-height: 1.35; padding: 0 0.3rem; }
+  .tl-step.done .ttl { color: var(--amber); }
+
+  .gap-callout {
+    margin-top: 0.7rem; padding: 0.7rem 0.95rem;
+    background: rgba(193, 25, 25, 0.15);
+    border-left: 3px solid var(--editorial-red);
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic; font-size: 0.92rem; line-height: 1.4;
+    flex-shrink: 0;
+  }
+  .gap-callout strong {
+    font-family: 'Inter', sans-serif; font-style: normal;
+    color: var(--amber); font-weight: 700;
+  }
+
+  /* Two reasons */
+  .reasons {
+    grid-column: span 2;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem;
+    padding-top: 0.8rem;
+    border-top: 1px solid rgba(20, 17, 13, 0.15);
+  }
+  .reason h4 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.56rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--editorial-red); margin-bottom: 0.3rem;
+  }
+  .reason h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15rem; font-weight: 600; color: var(--editorial-ink);
+    margin-bottom: 0.35rem; line-height: 1.2;
+  }
+  .reason p {
+    font-size: 0.78rem; color: rgba(20, 17, 13, 0.78);
+    line-height: 1.5; margin-bottom: 0.4rem;
+  }
+  .reason ul { list-style: none; display: flex; flex-wrap: wrap; gap: 0.3rem; }
+  .reason li {
+    font-size: 0.7rem; color: rgba(20, 17, 13, 0.72);
+    padding: 0.18rem 0.5rem;
+    background: rgba(20, 17, 13, 0.05); border-radius: 3px;
+  }
+
+  @media (max-width: 980px) {
+    .recep-grid { grid-template-columns: 1fr; }
+    .reasons { grid-template-columns: 1fr; gap: 0.8rem; }
+    .timeline { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media print { body { background: var(--editorial-cream); color: var(--editorial-ink); } }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="logo">
+    <span class="a">Adobe</span>
+    <span class="sep">/</span>
+    <span>Experience Modernization Agent</span>
+  </div>
+  <div class="slide-counter">SLIDE · 5 / 8</div>
+  <div class="topnav-actions">
+    <a class="nav-link" href="03-funnel.html">← Prev</a>
+    <a class="nav-link" href="04-bridge.html">Next →</a>
+  </div>
+</nav>
+
+<aside class="side-dots">
+  <a href="index.html" data-label="Cover"></a>
+  <a href="01-anatomy.html" data-label="1. Anatomy"></a>
+  <a href="02-jobs.html" data-label="2. Jobs"></a>
+  <a href="05-adoption.html" data-label="3. Adoption"></a>
+  <a href="03-funnel.html" data-label="4. PLG funnel"></a>
+  <a href="06-reception.html" class="current" data-label="5. Reception"></a>
+  <a href="04-bridge.html" data-label="6. Bridge"></a>
+  <a href="04b-slicc.html" data-label="7. SLICC"></a>
+  <a href="07-lab.html" data-label="8. Lab"></a>
+</aside>
+
+<main>
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="ed-eyebrow reveal">
+        <span>05 · The Honest Read</span>
+        <span class="ed-meta">Edition · May 2026 · No. 05</span>
+      </div>
+
+      <h1 class="ed-headline reveal reveal-1">
+        Everyone wants to try it.
+        <span class="italic">Few want to ship it.</span>
+      </h1>
+
+      <p class="ed-deck reveal reveal-2">
+        High interest. Slow conversion. The bottleneck is not technology — it's organizational
+        readiness, review cycles, and reluctance to put a name on AI output.
+      </p>
+
+      <div class="byline reveal reveal-2">By Growth &amp; Adoption · field notes · May 2026</div>
+
+      <div class="recep-grid">
+        <!-- Gauges -->
+        <div class="gauges-col">
+          <div class="gauge-card high reveal reveal-3">
+            <div class="g-lbl">Inbound interest</div>
+            <div class="g-h">Even <em>Microsoft</em> wants a demo.</div>
+            <div class="gauge-row">
+              <div class="gauge-svg-wrap">
+                <svg class="gauge-svg" viewBox="0 0 200 110">
+                  <path d="M20,100 A80,80 0 0,1 180,100" stroke="rgba(20,17,13,0.1)" stroke-width="14" fill="none" stroke-linecap="round"/>
+                  <path d="M20,100 A80,80 0 0,1 180,100" stroke="var(--editorial-ink)" stroke-width="14" fill="none" stroke-linecap="round"
+                        stroke-dasharray="251" stroke-dashoffset="20"
+                        style="animation: dashFill 1.6s ease-out forwards;"/>
+                  <style>@keyframes dashFill { from { stroke-dashoffset: 251; } }</style>
+                </svg>
+                <div class="g-val">92%</div>
+              </div>
+              <div class="g-cap">customers asked for a session in the last 90 days</div>
+            </div>
+          </div>
+          <div class="gauge-card low reveal reveal-4">
+            <div class="g-lbl">Conversion to live</div>
+            <div class="g-h">A <em>thin trickle</em> reaches production.</div>
+            <div class="gauge-row">
+              <div class="gauge-svg-wrap">
+                <svg class="gauge-svg" viewBox="0 0 200 110">
+                  <path d="M20,100 A80,80 0 0,1 180,100" stroke="rgba(20,17,13,0.1)" stroke-width="14" fill="none" stroke-linecap="round"/>
+                  <path d="M20,100 A80,80 0 0,1 180,100" stroke="var(--editorial-red)" stroke-width="14" fill="none" stroke-linecap="round"
+                        stroke-dasharray="251" stroke-dashoffset="246"
+                        style="animation: dashFillLow 1.8s ease-out forwards;"/>
+                  <style>@keyframes dashFillLow { from { stroke-dashoffset: 251; } }</style>
+                </svg>
+                <div class="g-val">1.9%</div>
+              </div>
+              <div class="g-cap">contacted → live in production</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Story -->
+        <div class="story-block reveal reveal-4">
+          <div class="s-eye">FIELD STORY · SOCIÉTÉ GÉNÉRALE × VALTECH · APR 2026</div>
+          <h2 class="s-head">
+            They migrated <em>400 pages</em> faster than expected.<br>
+            The customer's timeline didn't move <em>a day</em>.
+          </h2>
+
+          <div class="timeline">
+            <div class="tl-step done">
+              <div class="dot"></div>
+              <div class="when">Q1 · plan</div>
+              <div class="ttl">Project scoped</div>
+              <div class="desc">15-month delivery agreed</div>
+            </div>
+            <div class="tl-step done">
+              <div class="dot"></div>
+              <div class="when">Q1→Q2 · build</div>
+              <div class="ttl">EMA does its job</div>
+              <div class="desc">400 pages, ahead of plan</div>
+            </div>
+            <div class="tl-step now">
+              <div class="dot"></div>
+              <div class="when">Q2 · today</div>
+              <div class="ttl">"Doing other things"</div>
+              <div class="desc">No-one wants to renegotiate</div>
+            </div>
+            <div class="tl-step">
+              <div class="dot"></div>
+              <div class="when">Q3+ · go-live</div>
+              <div class="ttl">Originally planned</div>
+              <div class="desc">Migration was &lt;5% of plan</div>
+            </div>
+          </div>
+
+          <div class="gap-callout">
+            Implementation time was <strong>never the bottleneck</strong>. Reviews, sign-offs, legal,
+            content lock, marketing calendar — that's where the year goes. EMA gives back weeks. The
+            customer needs us to give back <em>months</em>.
+          </div>
+        </div>
+
+        <!-- Two reasons -->
+        <div class="reasons reveal reveal-5">
+          <div class="reason">
+            <h4>Reason · I</h4>
+            <h3>The review tax.</h3>
+            <p>
+              Every page touched by AI gets re-reviewed by humans afraid to put their name on output
+              they didn't author. The savings on generation are eaten by the cost of trust.
+            </p>
+            <ul>
+              <li>Brand sign-off</li>
+              <li>Legal &amp; reg</li>
+              <li>Visual fidelity</li>
+              <li>Accessibility</li>
+            </ul>
+          </div>
+          <div class="reason">
+            <h4>Reason · II</h4>
+            <h3>The calendar tax.</h3>
+            <p>
+              Migration is rarely the critical path. Customers schedule go-lives around campaigns,
+              board cycles, and risk windows. A 4-week migration in a 15-month program changes nothing
+              about the date.
+            </p>
+            <ul>
+              <li>Marketing cal.</li>
+              <li>SI / agency contracts</li>
+              <li>Procurement</li>
+              <li>"Quiet quarters"</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="slide-foot">
+  <a href="03-funnel.html">← Prev</a>
+  <a href="04-bridge.html">Next →</a>
+</div>
+
+<script src="assets/effects.js"></script>
+<script>
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') location.href = '04-bridge.html';
+    if (e.key === 'ArrowLeft') location.href = '03-funnel.html';
+  });
+</script>
+
+</body>
+</html>

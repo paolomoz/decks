@@ -1,0 +1,198 @@
+/* ══════════════════════════════════════════════════════════════════
+   EMA v3 — fit-to-viewport, no scrolling per slide
+   ══════════════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  /* Stardust */
+  --ink: #060A14; --ink2: #0A1024; --ink3: #121A2E;
+  --amber: #FFD98A; --amber-deep: #E8B95E; --amber-burnt: #C9822D;
+  --dust: #F5F0E6; --dust-dim: rgba(245, 240, 230, 0.62); --dust-faint: rgba(245, 240, 230, 0.38);
+  /* of1 */
+  --of1-bg: #1C1917; --of1-text: #F5F0E8; --of1-orange: #FF3D00;
+  --of1-blue: #1A1AFF; --of1-mint: #00E5A0;
+  /* Adobe heritage */
+  --red: #eb1000; --red2: #ff3320;
+  /* Common */
+  --term-bg: #0a0e12; --term-green: #28d278; --term-cyan: #5fd4ff; --term-amber: #f0a000;
+  /* Editorial */
+  --editorial-cream: #f4ede2; --editorial-ink: #14110d; --editorial-red: #c11919;
+}
+
+html, body {
+  height: 100%; overflow: hidden;
+}
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-feature-settings: 'cv11', 'ss01';
+  background: var(--ink); color: var(--dust);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+
+/* ── BACKGROUND CANVAS ─────────────────────────────────────────── */
+.bg-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; width: 100%; height: 100%; }
+
+/* ── TOP NAV ───────────────────────────────────────────────────── */
+.topnav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 300;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.7rem 1.6rem; height: 48px;
+  background: rgba(6, 10, 20, 0.6); backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.logo { font-weight: 800; font-size: 0.85rem; display: flex; gap: 0.5rem; align-items: center; }
+.logo .a { color: var(--red); }
+.logo .sep { color: var(--dust-faint); font-weight: 300; }
+.slide-counter {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.66rem; color: var(--dust-faint);
+  letter-spacing: 0.16em; text-transform: uppercase;
+}
+.topnav-actions { display: flex; gap: 0.4rem; }
+.nav-link {
+  padding: 0.32rem 0.8rem; border-radius: 4px;
+  color: var(--dust-dim); font-size: 0.7rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.06em; transition: all 0.2s;
+}
+.nav-link:hover { color: var(--amber); border-color: var(--amber); }
+
+/* ── SIDE DOTS ─────────────────────────────────────────────────── */
+.side-dots {
+  position: fixed; right: 1rem; top: 50%; transform: translateY(-50%);
+  z-index: 200; display: flex; flex-direction: column; gap: 0.5rem;
+}
+.side-dots a {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18); transition: all 0.2s; position: relative;
+}
+.side-dots a:hover { background: var(--amber); transform: scale(1.4); }
+.side-dots a.current { background: var(--amber); transform: scale(1.5); box-shadow: 0 0 14px var(--amber); }
+.side-dots a::after {
+  content: attr(data-label); position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
+  white-space: nowrap; font-size: 0.66rem; background: rgba(6, 10, 20, 0.95);
+  padding: 0.25rem 0.65rem; border-radius: 3px; color: var(--dust);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  opacity: 0; pointer-events: none; transition: opacity 0.2s;
+  font-family: 'JetBrains Mono', monospace; letter-spacing: 0.04em;
+}
+.side-dots a:hover::after { opacity: 1; }
+
+/* ── SLIDE — fit-to-viewport ───────────────────────────────────── */
+main { height: 100vh; }
+.slide {
+  height: 100vh; width: 100%;
+  display: flex; flex-direction: column;
+  padding: 64px 2rem 64px;
+  position: relative; z-index: 1;
+  overflow: hidden;
+}
+.slide-inner {
+  max-width: 1280px; width: 100%; margin: 0 auto;
+  flex: 1; display: flex; flex-direction: column; justify-content: center;
+  min-height: 0;
+}
+
+/* ── REVEAL ──────────────────────────────────────────────────── */
+.reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1); }
+.reveal.revealed { opacity: 1; transform: translateY(0); }
+.reveal-1 { transition-delay: 0.08s; }
+.reveal-2 { transition-delay: 0.18s; }
+.reveal-3 { transition-delay: 0.3s; }
+.reveal-4 { transition-delay: 0.42s; }
+.reveal-5 { transition-delay: 0.55s; }
+.reveal-6 { transition-delay: 0.7s; }
+
+/* ── TYPEWRITER ────────────────────────────────────────────────── */
+.tw-cursor { display: inline-block; width: 0.5em; animation: blink 1s steps(2) infinite; color: var(--term-green); }
+@keyframes blink { 50% { opacity: 0; } }
+.tw-line { font-family: 'JetBrains Mono', monospace; }
+
+/* ── COMMON UI PRIMITIVES ──────────────────────────────────────── */
+.eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.66rem; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--amber-deep); margin-bottom: 0.7rem;
+}
+.slide-title {
+  font-family: 'Inter', sans-serif;
+  font-weight: 800; font-size: clamp(1.9rem, 4.4vw, 3.6rem);
+  line-height: 1.02; letter-spacing: -0.035em;
+  margin-bottom: 0.7rem;
+}
+.slide-title .accent { color: var(--amber); }
+.slide-title .accent-orange { color: var(--of1-orange); }
+.slide-title .accent-red { color: var(--red); }
+.slide-title .serif { font-family: 'Cormorant Garamond', serif; font-weight: 500; font-style: italic; }
+.slide-sub {
+  font-size: clamp(0.92rem, 1.15vw, 1.08rem);
+  color: var(--dust-dim); max-width: 820px;
+  line-height: 1.5; margin-bottom: 1.4rem;
+}
+
+code, .mono {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.9em;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.1em 0.36em; border-radius: 3px; color: var(--amber);
+}
+
+/* Footer nav */
+.slide-foot {
+  position: fixed; bottom: 0.9rem; left: 0; right: 0;
+  display: flex; justify-content: center; gap: 0.6rem;
+  z-index: 100; pointer-events: none;
+}
+.slide-foot a {
+  pointer-events: auto;
+  padding: 0.4rem 1rem; border-radius: 4px;
+  background: rgba(6, 10, 20, 0.85); backdrop-filter: blur(12px);
+  color: var(--dust-dim); font-size: 0.74rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-family: 'JetBrains Mono', monospace; letter-spacing: 0.06em;
+  transition: all 0.2s;
+}
+.slide-foot a:hover { border-color: var(--amber); color: var(--amber); }
+.slide-foot a.disabled { opacity: 0.25; pointer-events: none; }
+
+/* Badge */
+.badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 0.3rem 0.8rem; border-radius: 999px;
+  background: rgba(255, 217, 138, 0.06);
+  border: 1px solid rgba(255, 217, 138, 0.25);
+  font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--amber); margin-bottom: 1rem;
+  font-family: 'JetBrains Mono', monospace;
+}
+.badge .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--amber); animation: pulse 2s ease-in-out infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.7); } }
+
+/* Slack message */
+.slack-thread { background: #1a1d21; border-radius: 6px; padding: 0.9rem 1.1rem; border: 1px solid rgba(255, 255, 255, 0.08); margin: 0.8rem 0; }
+.slack-msg { display: flex; gap: 0.7rem; margin-bottom: 0.6rem; align-items: flex-start; }
+.slack-msg:last-child { margin-bottom: 0; }
+.slack-avatar { width: 30px; height: 30px; border-radius: 5px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 0.74rem; font-weight: 700; color: #fff; }
+.slack-name { font-weight: 700; font-size: 0.84rem; color: #d1d2d3; display: flex; align-items: baseline; gap: 0.4rem; }
+.slack-time { font-weight: 400; font-size: 0.66rem; color: #9b9c9e; }
+.slack-text { font-size: 0.84rem; color: #d1d2d3; line-height: 1.4; margin-top: 0.15rem; }
+.slack-text .quote-strong { color: var(--amber); font-weight: 600; }
+
+/* Responsive — hide side dots on small screens */
+@media (max-width: 760px) {
+  .side-dots { display: none; }
+  .slide { padding: 56px 1rem 56px; }
+}
+
+/* Print */
+@media print {
+  html, body { overflow: visible; height: auto; }
+  .topnav, .side-dots, .slide-foot, .bg-canvas, #cursor-glow { display: none !important; }
+  body { background: #fff; color: #000; }
+  .slide { page-break-after: always; height: auto; min-height: auto; }
+}
