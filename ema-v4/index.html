@@ -10,9 +10,8 @@
 
   .cover-hero {
     height: 100vh; padding: 80px 3rem 80px;
-    display: grid; grid-template-columns: 1.5fr 1fr; gap: 3rem;
+    display: flex; align-items: center;
     position: relative; z-index: 2; max-width: 1500px; margin: 0 auto;
-    align-items: center;
   }
 
   .cover-bg-text {
@@ -76,56 +75,6 @@
   }
   .cover-meta .val { font-size: 1.4rem; color: var(--dust); font-weight: 500; }
 
-  /* Right pane: piñata stage */
-  .cover-right {
-    position: relative; z-index: 3;
-    display: flex; align-items: center; justify-content: center;
-  }
-
-  .pinata-stage {
-    position: relative;
-    height: 380px; width: 100%;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .pinata-rope {
-    position: absolute; top: 0; left: 50%; transform: translateX(-50%);
-    width: 3px; height: 110px;
-    background: linear-gradient(180deg, transparent, rgba(255, 217, 138, 0.5));
-    transform-origin: top center;
-    animation: ropeSway 3s ease-in-out infinite;
-  }
-  @keyframes ropeSway {
-    0%, 100% { transform: translateX(-50%) rotate(-4deg); }
-    50% { transform: translateX(-50%) rotate(4deg); }
-  }
-  .pinata-emoji {
-    font-size: 14rem; cursor: pointer; user-select: none;
-    filter: drop-shadow(0 0 40px rgba(255, 217, 138, 0.55));
-    animation: pinataSway 3s ease-in-out infinite;
-    transform-origin: top center;
-    transition: filter 0.2s, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    margin-top: 70px;
-  }
-  .pinata-emoji:hover { filter: drop-shadow(0 0 60px rgba(255, 217, 138, 0.95)); }
-  @keyframes pinataSway {
-    0%, 100% { transform: rotate(-9deg) scale(1); }
-    25% { transform: rotate(9deg) scale(1.04); }
-    50% { transform: rotate(-5deg) scale(1); }
-    75% { transform: rotate(7deg) scale(1.02); }
-  }
-  .pinata-ring {
-    position: absolute; top: 60%; left: 50%;
-    transform: translate(-50%, -50%) scale(0);
-    width: 240px; height: 240px; border-radius: 50%;
-    border: 3px solid var(--amber); opacity: 0; pointer-events: none;
-  }
-  .pinata-hint {
-    position: absolute; bottom: 0;
-    left: 50%; transform: translateX(-50%);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.95rem; color: var(--dust-faint);
-    letter-spacing: 0.22em; text-transform: uppercase;
-  }
   @keyframes confDrop {
     to { transform: translate(var(--dx), var(--dy)) rotate(var(--rot)) scale(0.5); opacity: 0; }
   }
@@ -140,8 +89,7 @@
   .cover-foot a { color: var(--amber); border-bottom: 1px dotted var(--amber); padding-bottom: 2px; }
 
   @media (max-width: 920px) {
-    .cover-hero { grid-template-columns: 1fr; padding-top: 80px; }
-    .cover-right { display: none; }
+    .cover-hero { padding-top: 80px; }
     .cover-bg-text { font-size: 12rem; opacity: 0.04; }
   }
 </style>
@@ -203,14 +151,6 @@
       </div>
     </div>
 
-    <div class="cover-right">
-      <div class="pinata-stage reveal reveal-2">
-        <div class="pinata-rope"></div>
-        <span class="pinata-emoji" id="pinata">🪅</span>
-        <div class="pinata-ring" id="pinata-ring"></div>
-        <div class="pinata-hint">click the piñata</div>
-      </div>
-    </div>
   </section>
 
   <div class="cover-foot">
@@ -222,31 +162,6 @@
 <script>
   startEmbers('embers', { count: 130 });
   attachCursorGlow('rgba(255, 217, 138, 0.05)');
-
-  const pinata = document.getElementById('pinata');
-  const ring = document.getElementById('pinata-ring');
-  if (pinata) {
-    pinata.addEventListener('click', () => {
-      confettiBurst(pinata);
-      pinata.style.animation = 'none';
-      pinata.style.transform = 'scale(0.7) rotate(-22deg)';
-      setTimeout(() => {
-        pinata.style.transform = 'scale(1.4) rotate(20deg)';
-        setTimeout(() => {
-          pinata.style.transform = '';
-          pinata.style.animation = '';
-        }, 280);
-      }, 150);
-      ring.style.transition = 'none';
-      ring.style.transform = 'translate(-50%,-50%) scale(0)';
-      ring.style.opacity = '1';
-      requestAnimationFrame(() => {
-        ring.style.transition = 'transform 0.7s ease-out, opacity 0.7s ease-out';
-        ring.style.transform = 'translate(-50%,-50%) scale(4)';
-        ring.style.opacity = '0';
-      });
-    });
-  }
 
   document.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowRight' || e.key === ' ') location.href = '01-anatomy.html';
