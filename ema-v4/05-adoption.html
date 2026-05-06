@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>03 · Adoption · EMA</title>
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+  body {
+    background:
+      radial-gradient(ellipse at 70% 0%, rgba(235, 16, 0, 0.13) 0%, transparent 55%),
+      linear-gradient(180deg, #0a0a0a 0%, #1a0808 100%);
+  }
+
+  .adopt-eyebrow { color: var(--red2); }
+  .adopt-title .accent { color: var(--red2); text-shadow: 0 0 22px rgba(235, 16, 0, 0.4); }
+
+  .metrics-grid {
+    display: grid; grid-template-columns: 1.4fr 1fr 1fr;
+    gap: 2px; flex: 1; min-height: 0;
+    background: rgba(235, 16, 0, 0.18);
+    border: 1px solid rgba(235, 16, 0, 0.18);
+  }
+  .m-cell {
+    padding: 2.4rem 2.4rem;
+    background: rgba(10, 10, 10, 0.85);
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .m-cell.lead { background: linear-gradient(135deg, rgba(235, 16, 0, 0.18), rgba(255, 51, 32, 0.04)); }
+
+  .m-cell .num {
+    font-family: 'Inter', sans-serif;
+    font-weight: 200; font-size: clamp(7rem, 12vw, 11rem);
+    line-height: 0.92; letter-spacing: -0.06em;
+    color: var(--dust);
+  }
+  .m-cell .num .strong { font-weight: 800; }
+  .m-cell.lead .num {
+    background: linear-gradient(135deg, var(--red2), var(--red));
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .m-cell .num .unit {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic; font-weight: 500;
+    font-size: 0.5em; color: var(--red2);
+    -webkit-text-fill-color: var(--red2);
+    margin-left: 0.2rem;
+  }
+  .m-cell .label {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(1.4rem, 1.9vw, 1.8rem);
+    color: var(--dust); margin-top: 1rem;
+    line-height: 1.3; font-weight: 600;
+    letter-spacing: -0.005em;
+  }
+  .m-cell .sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1rem; color: var(--dust-faint);
+    margin-top: 0.6rem; letter-spacing: 0.06em;
+  }
+  .m-cell .sub strong { color: var(--red2); font-weight: 700; }
+
+  @media (max-width: 980px) {
+    .metrics-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="logo">
+    <span class="a">Adobe</span>
+    <span class="sep">/</span>
+    <span>Experience Modernization Agent</span>
+  </div>
+  <div class="slide-counter">SLIDE · 3 / 8</div>
+  <div class="topnav-actions">
+    <a class="nav-link" href="02-jobs.html">← Prev</a>
+    <a class="nav-link" href="03-funnel.html">Next →</a>
+  </div>
+</nav>
+
+<aside class="side-dots">
+  <a href="index.html" data-label="Cover"></a>
+  <a href="01-anatomy.html" data-label="1. Anatomy"></a>
+  <a href="02-jobs.html" data-label="2. Jobs"></a>
+  <a href="05-adoption.html" class="current" data-label="3. Adoption"></a>
+  <a href="03-funnel.html" data-label="4. PLG funnel"></a>
+  <a href="06-reception.html" data-label="5. Reception"></a>
+  <a href="04-bridge.html" data-label="6. Bridge"></a>
+  <a href="04b-slicc.html" data-label="7. SLICC"></a>
+  <a href="07-lab.html" data-label="8. Lab"></a>
+</aside>
+
+<main>
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow adopt-eyebrow reveal">03 · ADOPTION</div>
+      <h1 class="slide-title adopt-title reveal reveal-1">
+        Real customers. <span class="accent">Real production.</span>
+      </h1>
+
+      <div class="metrics-grid">
+        <div class="m-cell lead reveal reveal-2">
+          <div class="num"><span class="strong">$2.65</span><span class="unit">M</span></div>
+          <div class="label">Customer value generated</div>
+          <div class="sub">measured at avg page rebuild cost</div>
+        </div>
+
+        <div class="m-cell reveal reveal-3">
+          <div class="num"><span class="strong">300</span>+</div>
+          <div class="label">Domains in production</div>
+          <div class="sub">across <strong>10 brand portfolios</strong></div>
+        </div>
+
+        <div class="m-cell reveal reveal-4">
+          <div class="num"><span class="strong">2K</span></div>
+          <div class="label">Pages migrated · 4 weeks</div>
+          <div class="sub"><strong>anchor case</strong> · global airline</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="slide-foot">
+  <a href="02-jobs.html">← Prev</a>
+  <a href="03-funnel.html">Next →</a>
+</div>
+
+<script src="assets/effects.js"></script>
+<script>
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') location.href = '03-funnel.html';
+    if (e.key === 'ArrowLeft') location.href = '02-jobs.html';
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>05 · Reception · EMA</title>
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+  body { background: var(--editorial-cream); color: var(--editorial-ink); }
+  .topnav { background: rgba(244, 237, 226, 0.85); border-bottom: 1px solid rgba(20, 17, 13, 0.1); }
+  .topnav .logo .a { color: var(--editorial-red); }
+  .topnav .logo, .slide-counter { color: var(--editorial-ink); }
+  .nav-link { color: var(--editorial-ink); border-color: rgba(20, 17, 13, 0.2); }
+  .nav-link:hover { color: var(--editorial-red); border-color: var(--editorial-red); background: rgba(193, 25, 25, 0.05); }
+  .side-dots a { background: rgba(20, 17, 13, 0.18); }
+  .side-dots a.current { background: var(--editorial-red); box-shadow: 0 0 12px var(--editorial-red); }
+  .side-dots a::after { background: var(--editorial-ink); color: var(--editorial-cream); border-color: transparent; }
+  .slide-foot a { background: rgba(244, 237, 226, 0.95); color: var(--editorial-ink); border-color: rgba(20, 17, 13, 0.2); }
+  .slide-foot a:hover { color: var(--editorial-red); border-color: var(--editorial-red); }
+
+  .ed-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.1rem; letter-spacing: 0.28em; text-transform: uppercase;
+    color: var(--editorial-red); margin-bottom: 1rem;
+    padding-bottom: 0.6rem; border-bottom: 2px solid rgba(20, 17, 13, 0.2);
+    font-weight: 600;
+  }
+
+  .ed-headline {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600; font-size: clamp(4.5rem, 9vw, 7.5rem);
+    line-height: 0.96; letter-spacing: -0.03em;
+    color: var(--editorial-ink); margin-bottom: 1.2rem;
+  }
+  .ed-headline .italic { font-style: italic; color: var(--editorial-red); font-weight: 500; }
+
+  .ed-deck {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic; font-size: clamp(1.6rem, 2.2vw, 2.2rem);
+    color: rgba(20, 17, 13, 0.78); max-width: 1100px; line-height: 1.4;
+    margin-bottom: 2rem;
+    padding-bottom: 1.4rem;
+    border-bottom: 2px solid var(--editorial-ink);
+  }
+
+  .recep-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 2.4rem;
+    flex: 1; min-height: 0; align-items: center;
+  }
+
+  .gauge-card {
+    border: 2px solid rgba(20, 17, 13, 0.18);
+    background: rgba(255, 255, 255, 0.5);
+    padding: 2rem 2.4rem;
+    display: flex; flex-direction: column;
+  }
+  .gauge-card.high { border-color: var(--editorial-ink); background: var(--editorial-ink); color: var(--editorial-cream); }
+  .gauge-card.high .g-lbl { color: var(--amber); }
+  .gauge-card.high .g-cap { color: rgba(244, 237, 226, 0.75); }
+  .gauge-card.high .g-num { color: var(--amber); }
+
+  .g-lbl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1rem; letter-spacing: 0.24em; text-transform: uppercase;
+    color: rgba(20, 17, 13, 0.65); margin-bottom: 0.8rem;
+    font-weight: 600;
+  }
+  .g-num {
+    font-family: 'Inter', sans-serif;
+    font-weight: 200; font-size: clamp(8rem, 14vw, 12rem);
+    line-height: 0.92; letter-spacing: -0.06em;
+    color: var(--editorial-ink);
+  }
+  .gauge-card.low .g-num { color: var(--editorial-red); font-weight: 800; }
+  .g-cap {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic; font-size: clamp(1.5rem, 2vw, 1.8rem);
+    color: rgba(20, 17, 13, 0.78);
+    line-height: 1.35; margin-top: 0.6rem;
+  }
+  .g-cap strong { font-style: normal; font-family: 'Inter', sans-serif; font-weight: 700; }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="logo">
+    <span class="a">Adobe</span>
+    <span class="sep">/</span>
+    <span>Experience Modernization Agent</span>
+  </div>
+  <div class="slide-counter">SLIDE · 5 / 8</div>
+  <div class="topnav-actions">
+    <a class="nav-link" href="03-funnel.html">← Prev</a>
+    <a class="nav-link" href="04-bridge.html">Next →</a>
+  </div>
+</nav>
+
+<aside class="side-dots">
+  <a href="index.html" data-label="Cover"></a>
+  <a href="01-anatomy.html" data-label="1. Anatomy"></a>
+  <a href="02-jobs.html" data-label="2. Jobs"></a>
+  <a href="05-adoption.html" data-label="3. Adoption"></a>
+  <a href="03-funnel.html" data-label="4. PLG funnel"></a>
+  <a href="06-reception.html" class="current" data-label="5. Reception"></a>
+  <a href="04-bridge.html" data-label="6. Bridge"></a>
+  <a href="04b-slicc.html" data-label="7. SLICC"></a>
+  <a href="07-lab.html" data-label="8. Lab"></a>
+</aside>
+
+<main>
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="ed-eyebrow reveal">05 · The Honest Read</div>
+
+      <h1 class="ed-headline reveal reveal-1">
+        Everyone wants to try it.<br>
+        <span class="italic">Few want to ship it.</span>
+      </h1>
+
+      <p class="ed-deck reveal reveal-2">
+        The bottleneck isn't technology — it's review cycles, brand sign-off, and reluctance to put a name on AI output.
+      </p>
+
+      <div class="recep-grid">
+        <div class="gauge-card high reveal reveal-3">
+          <div class="g-lbl">Inbound interest</div>
+          <div class="g-num">92<span style="font-size: 0.5em; vertical-align: 0.2em;">%</span></div>
+          <div class="g-cap">of customers asked for a session in the last 90 days</div>
+        </div>
+
+        <div class="gauge-card low reveal reveal-4">
+          <div class="g-lbl">Conversion to live</div>
+          <div class="g-num">1.9<span style="font-size: 0.5em; vertical-align: 0.2em;">%</span></div>
+          <div class="g-cap">contacted → <strong>live in production</strong></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="slide-foot">
+  <a href="03-funnel.html">← Prev</a>
+  <a href="04-bridge.html">Next →</a>
+</div>
+
+<script src="assets/effects.js"></script>
+<script>
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') location.href = '04-bridge.html';
+    if (e.key === 'ArrowLeft') location.href = '03-funnel.html';
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>02 · Jobs · EMA</title>
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+  body {
+    background:
+      radial-gradient(ellipse at 90% 0%, rgba(255, 61, 0, 0.07) 0%, transparent 55%),
+      radial-gradient(ellipse at 0% 100%, rgba(0, 229, 160, 0.04) 0%, transparent 55%),
+      var(--of1-bg);
+    color: var(--of1-text);
+  }
+  .jobs-bg-num {
+    position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic; font-weight: 600;
+    font-size: clamp(28rem, 45vw, 50rem); line-height: 0.85;
+    color: var(--of1-orange); opacity: 0.04; user-select: none;
+    pointer-events: none; z-index: 0;
+  }
+
+  .jobs-eyebrow { color: var(--of1-orange); }
+  .jobs-title .accent {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500; font-style: italic; color: var(--of1-orange);
+  }
+
+  .jobs-grid {
+    display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr;
+    gap: 2px; flex: 1; min-height: 0;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .job-card {
+    background: var(--of1-bg);
+    padding: 2rem 2.4rem; position: relative; overflow: hidden;
+    display: flex; flex-direction: column; justify-content: space-between;
+    transition: background 0.3s;
+  }
+  .job-card:hover { background: rgba(255, 61, 0, 0.05); }
+  .job-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1rem; letter-spacing: 0.22em; color: var(--of1-orange);
+    font-weight: 600;
+  }
+  .job-verb {
+    font-family: 'Inter', sans-serif;
+    font-weight: 800; font-size: clamp(3.2rem, 5.5vw, 5rem);
+    letter-spacing: -0.04em; color: var(--of1-text);
+    line-height: 0.95;
+    margin: 1rem 0;
+  }
+  .job-verb .accent {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic; font-weight: 500; color: var(--of1-orange);
+  }
+  .job-line {
+    font-size: 1.4rem; color: rgba(245, 240, 232, 0.78);
+    line-height: 1.35; font-weight: 400;
+  }
+  .job-line strong { color: var(--of1-orange); font-weight: 700; }
+
+  @media (max-width: 760px) {
+    .jobs-grid { grid-template-columns: 1fr; grid-template-rows: repeat(4, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<div class="jobs-bg-num reveal">4</div>
+
+<nav class="topnav">
+  <div class="logo">
+    <span class="a">Adobe</span>
+    <span class="sep">/</span>
+    <span>Experience Modernization Agent</span>
+  </div>
+  <div class="slide-counter">SLIDE · 2 / 8</div>
+  <div class="topnav-actions">
+    <a class="nav-link" href="01-anatomy.html">← Prev</a>
+    <a class="nav-link" href="05-adoption.html">Next →</a>
+  </div>
+</nav>
+
+<aside class="side-dots">
+  <a href="index.html" data-label="Cover"></a>
+  <a href="01-anatomy.html" data-label="1. Anatomy"></a>
+  <a href="02-jobs.html" class="current" data-label="2. Jobs"></a>
+  <a href="05-adoption.html" data-label="3. Adoption"></a>
+  <a href="03-funnel.html" data-label="4. PLG funnel"></a>
+  <a href="06-reception.html" data-label="5. Reception"></a>
+  <a href="04-bridge.html" data-label="6. Bridge"></a>
+  <a href="04b-slicc.html" data-label="7. SLICC"></a>
+  <a href="07-lab.html" data-label="8. Lab"></a>
+</aside>
+
+<main>
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow jobs-eyebrow reveal">02 · USE CASES</div>
+      <h1 class="slide-title jobs-title reveal reveal-1">
+        Four jobs. <span class="accent">One agent.</span>
+      </h1>
+
+      <div class="jobs-grid reveal reveal-2">
+        <div class="job-card">
+          <div class="job-num">01 · MIGRATE</div>
+          <div class="job-verb">Lift &amp; <span class="accent">modernize.</span></div>
+          <div class="job-line">Existing site → Edge Delivery Services. <strong>~2,000 pages in 4 weeks.</strong></div>
+        </div>
+
+        <div class="job-card">
+          <div class="job-num">02 · REDESIGN</div>
+          <div class="job-verb">Refresh, <span class="accent">don't rebuild.</span></div>
+          <div class="job-line">Same content. New design system. <strong>88% fidelity.</strong></div>
+        </div>
+
+        <div class="job-card">
+          <div class="job-num">03 · BUILD</div>
+          <div class="job-verb">New block <span class="accent">in minutes.</span></div>
+          <div class="job-line">Custom block scaffolded, styled, tested — <strong>straight into the codebase.</strong></div>
+        </div>
+
+        <div class="job-card">
+          <div class="job-num">04 · GENERATE</div>
+          <div class="job-verb">Brief <span class="accent">to live.</span></div>
+          <div class="job-line">Markdown brief becomes a structured site. <strong>Reviewed, then shipped.</strong></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="slide-foot">
+  <a href="01-anatomy.html">← Prev</a>
+  <a href="05-adoption.html">Next →</a>
+</div>
+
+<script src="assets/effects.js"></script>
+<script>
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') location.href = '05-adoption.html';
+    if (e.key === 'ArrowLeft') location.href = '01-anatomy.html';
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,226 @@
+/* ══════════════════════════════════════════════════════════════════
+   EMA v4 — fit-to-viewport, KEYNOTE-SCALE typography
+   Designed for ~5-8m audience viewing distance.
+   Headline floor 4rem, body floor 1.5rem, big numbers 7rem+, labels 1.2rem+.
+   ══════════════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  /* Stardust */
+  --ink: #060A14; --ink2: #0A1024; --ink3: #121A2E;
+  --amber: #FFD98A; --amber-deep: #E8B95E; --amber-burnt: #C9822D;
+  --dust: #F5F0E6; --dust-dim: rgba(245, 240, 230, 0.72); --dust-faint: rgba(245, 240, 230, 0.48);
+  /* of1 */
+  --of1-bg: #1C1917; --of1-text: #F5F0E8; --of1-orange: #FF3D00;
+  --of1-blue: #1A1AFF; --of1-mint: #00E5A0;
+  /* Adobe heritage */
+  --red: #eb1000; --red2: #ff3320;
+  /* Common */
+  --term-bg: #0a0e12; --term-green: #28d278; --term-cyan: #5fd4ff; --term-amber: #f0a000;
+  /* Editorial */
+  --editorial-cream: #f4ede2; --editorial-ink: #14110d; --editorial-red: #c11919;
+}
+
+html, body {
+  height: 100%; overflow: hidden;
+}
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-feature-settings: 'cv11', 'ss01';
+  background: var(--ink); color: var(--dust);
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+
+/* ── BACKGROUND CANVAS ─────────────────────────────────────────── */
+.bg-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; width: 100%; height: 100%; }
+
+/* ── TOP NAV ───────────────────────────────────────────────────── */
+.topnav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 300;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.9rem 2rem; height: 64px;
+  background: rgba(6, 10, 20, 0.6); backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.logo { font-weight: 800; font-size: 1.05rem; display: flex; gap: 0.6rem; align-items: center; }
+.logo .a { color: var(--red); }
+.logo .sep { color: var(--dust-faint); font-weight: 300; }
+.slide-counter {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.92rem; color: var(--dust-faint);
+  letter-spacing: 0.18em; text-transform: uppercase;
+}
+.topnav-actions { display: flex; gap: 0.5rem; }
+.nav-link {
+  padding: 0.45rem 1rem; border-radius: 5px;
+  color: var(--dust-dim); font-size: 0.92rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.06em; transition: all 0.2s;
+}
+.nav-link:hover { color: var(--amber); border-color: var(--amber); }
+
+/* ── SIDE DOTS ─────────────────────────────────────────────────── */
+.side-dots {
+  position: fixed; right: 1.4rem; top: 50%; transform: translateY(-50%);
+  z-index: 200; display: flex; flex-direction: column; gap: 0.7rem;
+}
+.side-dots a {
+  width: 11px; height: 11px; border-radius: 50%;
+  background: rgba(255, 255, 255, 0.22); transition: all 0.2s; position: relative;
+}
+.side-dots a:hover { background: var(--amber); transform: scale(1.4); }
+.side-dots a.current { background: var(--amber); transform: scale(1.6); box-shadow: 0 0 18px var(--amber); }
+.side-dots a::after {
+  content: attr(data-label); position: absolute; right: 22px; top: 50%; transform: translateY(-50%);
+  white-space: nowrap; font-size: 0.95rem; background: rgba(6, 10, 20, 0.95);
+  padding: 0.4rem 0.85rem; border-radius: 4px; color: var(--dust);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  opacity: 0; pointer-events: none; transition: opacity 0.2s;
+  font-family: 'JetBrains Mono', monospace; letter-spacing: 0.04em;
+}
+.side-dots a:hover::after { opacity: 1; }
+
+/* ── SLIDE — fit-to-viewport ───────────────────────────────────── */
+main { height: 100vh; }
+.slide {
+  height: 100vh; width: 100%;
+  display: flex; flex-direction: column;
+  padding: 80px 3rem 80px;
+  position: relative; z-index: 1;
+  overflow: hidden;
+}
+.slide-inner {
+  max-width: 1500px; width: 100%; margin: 0 auto;
+  flex: 1; display: flex; flex-direction: column; justify-content: center;
+  min-height: 0;
+}
+
+/* ── REVEAL ──────────────────────────────────────────────────── */
+.reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1); }
+.reveal.revealed { opacity: 1; transform: translateY(0); }
+.reveal-1 { transition-delay: 0.08s; }
+.reveal-2 { transition-delay: 0.18s; }
+.reveal-3 { transition-delay: 0.3s; }
+.reveal-4 { transition-delay: 0.42s; }
+.reveal-5 { transition-delay: 0.55s; }
+.reveal-6 { transition-delay: 0.7s; }
+
+/* ── TYPEWRITER ────────────────────────────────────────────────── */
+.tw-cursor { display: inline-block; width: 0.5em; animation: blink 1s steps(2) infinite; color: var(--term-green); }
+@keyframes blink { 50% { opacity: 0; } }
+.tw-line { font-family: 'JetBrains Mono', monospace; }
+
+/* ── COMMON UI PRIMITIVES — KEYNOTE SCALE ──────────────────────── */
+.eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.1rem; letter-spacing: 0.28em; text-transform: uppercase;
+  color: var(--amber-deep); margin-bottom: 1.6rem;
+  font-weight: 600;
+}
+.slide-title {
+  font-family: 'Inter', sans-serif;
+  font-weight: 800; font-size: clamp(4rem, 8.5vw, 7rem);
+  line-height: 0.98; letter-spacing: -0.045em;
+  margin-bottom: 1.4rem;
+}
+.slide-title .accent { color: var(--amber); }
+.slide-title .accent-orange { color: var(--of1-orange); }
+.slide-title .accent-red { color: var(--red); }
+.slide-title .serif { font-family: 'Cormorant Garamond', serif; font-weight: 500; font-style: italic; }
+.slide-sub {
+  font-size: clamp(1.5rem, 2.1vw, 2rem);
+  color: var(--dust-dim); max-width: 1100px;
+  line-height: 1.4; margin-bottom: 2.4rem;
+  font-weight: 400;
+}
+
+code, .mono {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.9em;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.1em 0.4em; border-radius: 4px; color: var(--amber);
+}
+
+/* Big number primitive — used by adoption, slicc, etc */
+.giga {
+  font-family: 'Inter', sans-serif;
+  font-weight: 200; font-size: clamp(7rem, 14vw, 12rem);
+  line-height: 0.92; letter-spacing: -0.06em;
+  color: var(--dust);
+}
+.giga .strong { font-weight: 800; }
+.giga .unit {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic; font-weight: 500;
+  font-size: 0.5em; color: var(--amber);
+  margin-left: 0.2rem;
+  vertical-align: 0.2em;
+}
+.giga-label {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(1.2rem, 1.7vw, 1.6rem);
+  font-weight: 500; line-height: 1.3;
+  color: var(--dust-dim); margin-top: 0.6rem;
+  letter-spacing: -0.005em;
+}
+.giga-label strong { color: var(--amber); font-weight: 700; }
+
+/* Footer nav */
+.slide-foot {
+  position: fixed; bottom: 1.2rem; left: 0; right: 0;
+  display: flex; justify-content: center; gap: 0.7rem;
+  z-index: 100; pointer-events: none;
+}
+.slide-foot a {
+  pointer-events: auto;
+  padding: 0.55rem 1.4rem; border-radius: 5px;
+  background: rgba(6, 10, 20, 0.85); backdrop-filter: blur(12px);
+  color: var(--dust-dim); font-size: 0.95rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-family: 'JetBrains Mono', monospace; letter-spacing: 0.06em;
+  transition: all 0.2s;
+}
+.slide-foot a:hover { border-color: var(--amber); color: var(--amber); }
+.slide-foot a.disabled { opacity: 0.25; pointer-events: none; }
+
+/* Badge */
+.badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 0.45rem 1.1rem; border-radius: 999px;
+  background: rgba(255, 217, 138, 0.06);
+  border: 1px solid rgba(255, 217, 138, 0.3);
+  font-size: 0.95rem; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--amber); margin-bottom: 1.2rem;
+  font-family: 'JetBrains Mono', monospace; font-weight: 600;
+}
+.badge .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--amber); animation: pulse 2s ease-in-out infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.7); } }
+
+/* Slack message */
+.slack-thread { background: #1a1d21; border-radius: 8px; padding: 1.1rem 1.4rem; border: 1px solid rgba(255, 255, 255, 0.1); margin: 1rem 0; }
+.slack-msg { display: flex; gap: 0.9rem; margin-bottom: 0.8rem; align-items: flex-start; }
+.slack-msg:last-child { margin-bottom: 0; }
+.slack-avatar { width: 40px; height: 40px; border-radius: 6px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 700; color: #fff; }
+.slack-name { font-weight: 700; font-size: 1.05rem; color: #d1d2d3; display: flex; align-items: baseline; gap: 0.5rem; }
+.slack-time { font-weight: 400; font-size: 0.82rem; color: #9b9c9e; }
+.slack-text { font-size: 1.05rem; color: #d1d2d3; line-height: 1.45; margin-top: 0.2rem; }
+.slack-text .quote-strong { color: var(--amber); font-weight: 600; }
+
+/* Responsive — hide side dots on small screens */
+@media (max-width: 760px) {
+  .side-dots { display: none; }
+  .slide { padding: 64px 1rem 64px; }
+}
+
+/* Print */
+@media print {
+  html, body { overflow: visible; height: auto; }
+  .topnav, .side-dots, .slide-foot, .bg-canvas, #cursor-glow { display: none !important; }
+  body { background: #fff; color: #000; }
+  .slide { page-break-after: always; height: auto; min-height: auto; }
+}

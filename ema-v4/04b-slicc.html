@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>07 · SLICC · EMA</title>
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+  body {
+    background:
+      radial-gradient(ellipse at 90% 0%, rgba(255, 217, 138, 0.12) 0%, transparent 55%),
+      radial-gradient(ellipse at 0% 100%, rgba(95, 212, 255, 0.08) 0%, transparent 55%),
+      linear-gradient(180deg, #0a0d1a 0%, #15101e 60%, #1a1410 100%);
+  }
+
+  .slicc-bg-text {
+    position: absolute; top: 50%; right: -2%;
+    transform: translateY(-50%);
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600; font-style: italic;
+    font-size: clamp(14rem, 28vw, 30rem); line-height: 1;
+    color: var(--amber); opacity: 0.04;
+    pointer-events: none; user-select: none; letter-spacing: -0.04em;
+    z-index: 0;
+  }
+
+  .slicc-eyebrow { color: var(--amber); display: flex; align-items: center; gap: 1rem; }
+  .slicc-eyebrow .vegas {
+    padding: 0.4rem 0.85rem;
+    background: rgba(255, 217, 138, 0.14);
+    border: 1px solid rgba(255, 217, 138, 0.35);
+    border-radius: 4px;
+    font-size: 0.9rem; letter-spacing: 0.18em;
+  }
+
+  .slicc-title .serif {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic; font-weight: 500;
+    background: linear-gradient(180deg, var(--amber) 0%, #c9822d 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .slicc-title .accent { color: var(--amber); }
+
+  .stat-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 2px; flex: 1; min-height: 0;
+    background: rgba(255, 217, 138, 0.18);
+    border: 1px solid rgba(255, 217, 138, 0.22);
+    border-radius: 5px; overflow: hidden;
+    position: relative; z-index: 2;
+  }
+  .stat-cell {
+    padding: 2.4rem 2rem;
+    background: rgba(6, 10, 20, 0.78);
+    backdrop-filter: blur(8px);
+    display: flex; flex-direction: column; justify-content: center;
+    position: relative;
+  }
+  .stat-cell .num {
+    font-family: 'Inter', sans-serif;
+    font-weight: 200; font-size: clamp(5rem, 9vw, 8rem);
+    color: var(--dust); line-height: 0.92; letter-spacing: -0.05em;
+  }
+  .stat-cell .num .strong { font-weight: 800; }
+  .stat-cell .num .unit {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic; font-weight: 500;
+    font-size: 0.55em; color: var(--amber);
+    margin-left: 0.18rem;
+  }
+  .stat-cell .label {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(1.2rem, 1.6vw, 1.5rem);
+    font-weight: 600; color: var(--dust);
+    margin-top: 0.8rem; line-height: 1.3;
+    letter-spacing: -0.005em;
+  }
+  .stat-cell .sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem; letter-spacing: 0.1em;
+    color: var(--dust-faint);
+    margin-top: 0.45rem; line-height: 1.4;
+  }
+  .stat-cell .sub strong { color: var(--amber); font-weight: 700; }
+
+  /* Takeaway strip */
+  .takeaway {
+    margin-top: 1.2rem;
+    padding: 1.2rem 1.6rem;
+    background: rgba(255, 217, 138, 0.06);
+    border: 1px solid rgba(255, 217, 138, 0.22);
+    border-left: 4px solid var(--amber);
+    border-radius: 5px;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic; font-size: clamp(1.4rem, 1.9vw, 1.7rem);
+    color: var(--dust); line-height: 1.4;
+    position: relative; z-index: 2;
+  }
+  .takeaway strong {
+    font-family: 'Inter', sans-serif; font-style: normal; font-weight: 800;
+    color: var(--amber);
+  }
+
+  /* Ice-cream easter egg — top-left */
+  .ic-egg {
+    position: absolute;
+    left: 1.2rem; top: 5.4rem;
+    width: 90px; height: 160px;
+    z-index: 4;
+    pointer-events: auto; cursor: pointer;
+  }
+  .ic-egg svg {
+    width: 100%; height: 100%;
+    animation: icSway 4s ease-in-out infinite;
+    transform-origin: 50% 100%;
+    filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.4));
+  }
+  @keyframes icSway {
+    0%, 100% { transform: rotate(-3deg); }
+    50% { transform: rotate(3deg); }
+  }
+
+  @media (max-width: 980px) {
+    .stat-grid { grid-template-columns: 1fr 1fr; }
+    .ic-egg { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="slicc-bg-text">SLICC</div>
+
+<canvas class="bg-canvas" id="orbs"></canvas>
+
+<nav class="topnav">
+  <div class="logo">
+    <span class="a">Adobe</span>
+    <span class="sep">/</span>
+    <span>Experience Modernization Agent</span>
+  </div>
+  <div class="slide-counter">SLIDE · 7 / 8</div>
+  <div class="topnav-actions">
+    <a class="nav-link" href="04-bridge.html">← Prev</a>
+    <a class="nav-link" href="07-lab.html">Next →</a>
+  </div>
+</nav>
+
+<aside class="side-dots">
+  <a href="index.html" data-label="Cover"></a>
+  <a href="01-anatomy.html" data-label="1. Anatomy"></a>
+  <a href="02-jobs.html" data-label="2. Jobs"></a>
+  <a href="05-adoption.html" data-label="3. Adoption"></a>
+  <a href="03-funnel.html" data-label="4. PLG funnel"></a>
+  <a href="06-reception.html" data-label="5. Reception"></a>
+  <a href="04-bridge.html" data-label="6. Bridge"></a>
+  <a href="04b-slicc.html" class="current" data-label="7. SLICC"></a>
+  <a href="07-lab.html" data-label="8. Lab"></a>
+</aside>
+
+<!-- Ice-cream easter egg -->
+<div class="ic-egg" id="icEgg" title="click for sprinkles">
+  <svg viewBox="0 0 90 160" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="scoop1" cx="0.35" cy="0.3" r="0.8">
+        <stop offset="0%" stop-color="#FFE9A6"/>
+        <stop offset="100%" stop-color="#E8B95E"/>
+      </radialGradient>
+      <radialGradient id="scoop2" cx="0.35" cy="0.3" r="0.8">
+        <stop offset="0%" stop-color="#A4F2E8"/>
+        <stop offset="100%" stop-color="#3DB8AC"/>
+      </radialGradient>
+      <radialGradient id="scoop3" cx="0.35" cy="0.3" r="0.8">
+        <stop offset="0%" stop-color="#D7B0F0"/>
+        <stop offset="100%" stop-color="#A06DC8"/>
+      </radialGradient>
+      <pattern id="waffle" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+        <rect width="8" height="8" fill="#C9822D"/>
+        <line x1="0" y1="0" x2="0" y2="8" stroke="#7A4F1A" stroke-width="1"/>
+        <line x1="0" y1="0" x2="8" y2="0" stroke="#7A4F1A" stroke-width="1"/>
+      </pattern>
+    </defs>
+    <!-- Cone -->
+    <polygon points="20,90 70,90 45,158" fill="url(#waffle)" stroke="#5A3810" stroke-width="1"/>
+    <!-- Scoops -->
+    <ellipse cx="45" cy="86" rx="28" ry="18" fill="url(#scoop1)" stroke="#B89540" stroke-width="0.5"/>
+    <ellipse cx="45" cy="62" rx="25" ry="17" fill="url(#scoop2)" stroke="#2A8A82" stroke-width="0.5"/>
+    <ellipse cx="45" cy="40" rx="22" ry="16" fill="url(#scoop3)" stroke="#7A4FA8" stroke-width="0.5"/>
+    <!-- Cherry -->
+    <circle cx="45" cy="22" r="6" fill="#E63946"/>
+    <path d="M45,16 Q48,10 52,12" stroke="#3E5A1C" stroke-width="1.5" fill="none"/>
+    <!-- Sprinkles target -->
+    <g id="sprinkles"></g>
+  </svg>
+</div>
+
+<main>
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow slicc-eyebrow reveal">
+        <span>07 · SLICC</span>
+        <span class="vegas">VEGAS · APR 20</span>
+      </div>
+      <h1 class="slide-title slicc-title reveal reveal-1">
+        Announced. <span class="serif">Spreading.</span>
+      </h1>
+
+      <div class="stat-grid">
+        <div class="stat-cell reveal reveal-2">
+          <div class="num"><span class="strong">982</span></div>
+          <div class="label">Sessions</div>
+          <div class="sub"><strong>387 users</strong> · post-Summit</div>
+        </div>
+
+        <div class="stat-cell reveal reveal-3">
+          <div class="num"><span class="strong">30</span>+</div>
+          <div class="label">Organizations</div>
+          <div class="sub">15 partners · 13 customers · 2 Adobe</div>
+        </div>
+
+        <div class="stat-cell reveal reveal-4">
+          <div class="num"><span class="strong">128</span></div>
+          <div class="label">Domains</div>
+          <div class="sub"><strong>119 customer</strong> domains</div>
+        </div>
+
+        <div class="stat-cell reveal reveal-5">
+          <div class="num"><span class="strong">92</span><span style="font-size: 0.55em; vertical-align: 0.18em; color: var(--amber);">%</span></div>
+          <div class="label">Successful completions</div>
+          <div class="sub">end-to-end · production work</div>
+        </div>
+      </div>
+
+      <div class="takeaway reveal reveal-5">
+        From the same toolkit: <strong>Microsoft</strong> wired SLICC into AEM. <strong>Audemars Piguet</strong> and <strong>Telenet</strong> ship migrations on their own. Partners — <strong>Slalom, Concentrix, JAKALA, KPMG, Hero Digital</strong> and more — already in.
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="slide-foot">
+  <a href="04-bridge.html">← Prev</a>
+  <a href="07-lab.html">Next →</a>
+</div>
+
+<script src="assets/effects.js"></script>
+<script>
+  if (typeof startOrbs === 'function') {
+    startOrbs('orbs', { count: 14, color: 'rgba(255, 217, 138, 0.15)' });
+  }
+
+  // Ice-cream click → sprinkles burst + cone hop
+  const icEgg = document.getElementById('icEgg');
+  const sprinklesG = icEgg && icEgg.querySelector('#sprinkles');
+  if (icEgg && sprinklesG) {
+    const COLORS = ['#FFD98A', '#A4F2E8', '#D7B0F0', '#FF9DAB', '#FFB347', '#A8E6CF'];
+    icEgg.addEventListener('click', () => {
+      // Cone wiggle
+      const svg = icEgg.querySelector('svg');
+      svg.style.animation = 'none';
+      svg.style.transform = 'rotate(-12deg) translateY(-6px)';
+      setTimeout(() => {
+        svg.style.transition = 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
+        svg.style.transform = 'rotate(8deg) translateY(0)';
+        setTimeout(() => {
+          svg.style.transition = '';
+          svg.style.transform = '';
+          svg.style.animation = '';
+        }, 400);
+      }, 60);
+      // Sprinkles
+      sprinklesG.innerHTML = '';
+      for (let i = 0; i < 18; i++) {
+        const angle = (Math.PI * 2 * i) / 18 + (Math.random() - 0.5) * 0.4;
+        const dist = 60 + Math.random() * 40;
+        const dx = Math.cos(angle) * dist;
+        const dy = Math.sin(angle) * dist - 10;
+        const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        rect.setAttribute('x', '44');
+        rect.setAttribute('y', '20');
+        rect.setAttribute('width', '3');
+        rect.setAttribute('height', '8');
+        rect.setAttribute('fill', COLORS[i % COLORS.length]);
+        rect.setAttribute('rx', '1.5');
+        rect.style.transformOrigin = '45px 24px';
+        rect.style.transform = 'rotate(0deg) translate(0, 0)';
+        rect.style.transition = `transform 0.9s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.9s ease-out`;
+        rect.style.opacity = '1';
+        sprinklesG.appendChild(rect);
+        requestAnimationFrame(() => {
+          rect.style.transform = `rotate(${Math.random() * 720}deg) translate(${dx}px, ${dy}px)`;
+          rect.style.opacity = '0';
+        });
+      }
+      setTimeout(() => sprinklesG.innerHTML = '', 1100);
+    });
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') location.href = '07-lab.html';
+    if (e.key === 'ArrowLeft') location.href = '04-bridge.html';
+  });
+</script>
+
+</body>
+</html>

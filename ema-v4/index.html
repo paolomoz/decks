@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EMA · Director Briefing · v4</title>
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+  body { background: linear-gradient(180deg, var(--ink) 0%, #0c1226 60%, var(--ink2) 100%); }
+
+  .cover-hero {
+    height: 100vh; padding: 80px 3rem 80px;
+    display: grid; grid-template-columns: 1.5fr 1fr; gap: 3rem;
+    position: relative; z-index: 2; max-width: 1500px; margin: 0 auto;
+    align-items: center;
+  }
+
+  .cover-bg-text {
+    position: absolute; top: 50%; right: -3%;
+    transform: translateY(-50%);
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600; font-style: italic;
+    font-size: clamp(14rem, 28vw, 30rem); line-height: 1;
+    color: var(--amber); opacity: 0.05; pointer-events: none;
+    user-select: none; letter-spacing: -0.04em; z-index: 1;
+  }
+
+  .cover-left { position: relative; z-index: 3; }
+
+  .cover-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.1rem; letter-spacing: 0.32em;
+    text-transform: uppercase; color: var(--amber);
+    margin-bottom: 2rem;
+    display: flex; align-items: center; gap: 1.4rem;
+  }
+  .cover-eyebrow::before {
+    content: ''; display: block; width: 80px; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--amber));
+  }
+
+  .cover-title {
+    font-family: 'Inter', sans-serif;
+    font-weight: 200; font-size: clamp(5rem, 11vw, 9rem);
+    line-height: 0.92; letter-spacing: -0.045em; color: var(--dust);
+  }
+  .cover-title .strong { font-weight: 800; color: var(--dust); }
+  .cover-title .serif {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500; font-style: italic; color: var(--amber);
+  }
+
+  .cover-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic; font-size: clamp(1.8rem, 2.6vw, 2.6rem);
+    color: var(--dust-dim); margin-top: 1.8rem; max-width: 820px;
+    line-height: 1.35;
+  }
+
+  .title-emphasis { position: relative; display: inline-block; }
+  .title-emphasis::after {
+    content: ''; position: absolute; left: 0; right: 0; bottom: 8%;
+    height: 22px; background: var(--amber);
+    z-index: -1; opacity: 0.25; transform: skewX(-8deg);
+  }
+
+  .cover-meta {
+    margin-top: 3rem; padding-top: 1.6rem;
+    border-top: 1px solid rgba(255, 217, 138, 0.2);
+    display: flex; gap: 3rem;
+  }
+  .cover-meta .lbl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--amber-burnt); margin-bottom: 0.5rem;
+  }
+  .cover-meta .val { font-size: 1.4rem; color: var(--dust); font-weight: 500; }
+
+  /* Right pane: piñata stage */
+  .cover-right {
+    position: relative; z-index: 3;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .pinata-stage {
+    position: relative;
+    height: 380px; width: 100%;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .pinata-rope {
+    position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    width: 3px; height: 110px;
+    background: linear-gradient(180deg, transparent, rgba(255, 217, 138, 0.5));
+    transform-origin: top center;
+    animation: ropeSway 3s ease-in-out infinite;
+  }
+  @keyframes ropeSway {
+    0%, 100% { transform: translateX(-50%) rotate(-4deg); }
+    50% { transform: translateX(-50%) rotate(4deg); }
+  }
+  .pinata-emoji {
+    font-size: 14rem; cursor: pointer; user-select: none;
+    filter: drop-shadow(0 0 40px rgba(255, 217, 138, 0.55));
+    animation: pinataSway 3s ease-in-out infinite;
+    transform-origin: top center;
+    transition: filter 0.2s, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    margin-top: 70px;
+  }
+  .pinata-emoji:hover { filter: drop-shadow(0 0 60px rgba(255, 217, 138, 0.95)); }
+  @keyframes pinataSway {
+    0%, 100% { transform: rotate(-9deg) scale(1); }
+    25% { transform: rotate(9deg) scale(1.04); }
+    50% { transform: rotate(-5deg) scale(1); }
+    75% { transform: rotate(7deg) scale(1.02); }
+  }
+  .pinata-ring {
+    position: absolute; top: 60%; left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    width: 240px; height: 240px; border-radius: 50%;
+    border: 3px solid var(--amber); opacity: 0; pointer-events: none;
+  }
+  .pinata-hint {
+    position: absolute; bottom: 0;
+    left: 50%; transform: translateX(-50%);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.95rem; color: var(--dust-faint);
+    letter-spacing: 0.22em; text-transform: uppercase;
+  }
+  @keyframes confDrop {
+    to { transform: translate(var(--dx), var(--dy)) rotate(var(--rot)) scale(0.5); opacity: 0; }
+  }
+
+  .cover-foot {
+    position: fixed; bottom: 1.4rem; left: 0; right: 0;
+    text-align: center; z-index: 100;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1rem; color: var(--dust-faint);
+    letter-spacing: 0.22em; text-transform: uppercase;
+  }
+  .cover-foot a { color: var(--amber); border-bottom: 1px dotted var(--amber); padding-bottom: 2px; }
+
+  @media (max-width: 920px) {
+    .cover-hero { grid-template-columns: 1fr; padding-top: 80px; }
+    .cover-right { display: none; }
+    .cover-bg-text { font-size: 12rem; opacity: 0.04; }
+  }
+</style>
+</head>
+<body>
+
+<canvas class="bg-canvas" id="embers"></canvas>
+
+<nav class="topnav">
+  <div class="logo">
+    <span class="a">Adobe</span>
+    <span class="sep">/</span>
+    <span>Experience Modernization Agent</span>
+  </div>
+  <div class="slide-counter">COVER · 0 / 8</div>
+  <div class="topnav-actions">
+    <a class="nav-link" href="01-anatomy.html">Begin →</a>
+  </div>
+</nav>
+
+<aside class="side-dots">
+  <a href="index.html" class="current" data-label="Cover"></a>
+  <a href="01-anatomy.html" data-label="1. Anatomy"></a>
+  <a href="02-jobs.html" data-label="2. Jobs"></a>
+  <a href="05-adoption.html" data-label="3. Adoption"></a>
+  <a href="03-funnel.html" data-label="4. PLG funnel"></a>
+  <a href="06-reception.html" data-label="5. Reception"></a>
+  <a href="04-bridge.html" data-label="6. Bridge"></a>
+  <a href="04b-slicc.html" data-label="7. SLICC"></a>
+  <a href="07-lab.html" data-label="8. Lab"></a>
+</aside>
+
+<main>
+  <section class="cover-hero">
+    <div class="cover-bg-text reveal">EMA</div>
+
+    <div class="cover-left">
+      <div class="cover-eyebrow reveal reveal-1">DIRECTOR BRIEFING · MAY 2026</div>
+
+      <h1 class="cover-title reveal reveal-2">
+        Experience<br>
+        <span class="serif">Modernization</span><br>
+        <span class="strong">Agent.</span>
+      </h1>
+
+      <p class="cover-subtitle reveal reveal-3">
+        What it is. <span class="title-emphasis">What we're learning.</span>
+      </p>
+
+      <div class="cover-meta reveal reveal-4">
+        <div>
+          <div class="lbl">Author</div>
+          <div class="val">Paolo Mottadelli</div>
+        </div>
+        <div>
+          <div class="lbl">Team</div>
+          <div class="val">Growth &amp; Adoption · AEM</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cover-right">
+      <div class="pinata-stage reveal reveal-2">
+        <div class="pinata-rope"></div>
+        <span class="pinata-emoji" id="pinata">🪅</span>
+        <div class="pinata-ring" id="pinata-ring"></div>
+        <div class="pinata-hint">click the piñata</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="cover-foot">
+    Press <a href="01-anatomy.html">→ to begin</a>
+  </div>
+</main>
+
+<script src="assets/effects.js"></script>
+<script>
+  startEmbers('embers', { count: 130 });
+  attachCursorGlow('rgba(255, 217, 138, 0.05)');
+
+  const pinata = document.getElementById('pinata');
+  const ring = document.getElementById('pinata-ring');
+  if (pinata) {
+    pinata.addEventListener('click', () => {
+      confettiBurst(pinata);
+      pinata.style.animation = 'none';
+      pinata.style.transform = 'scale(0.7) rotate(-22deg)';
+      setTimeout(() => {
+        pinata.style.transform = 'scale(1.4) rotate(20deg)';
+        setTimeout(() => {
+          pinata.style.transform = '';
+          pinata.style.animation = '';
+        }, 280);
+      }, 150);
+      ring.style.transition = 'none';
+      ring.style.transform = 'translate(-50%,-50%) scale(0)';
+      ring.style.opacity = '1';
+      requestAnimationFrame(() => {
+        ring.style.transition = 'transform 0.7s ease-out, opacity 0.7s ease-out';
+        ring.style.transform = 'translate(-50%,-50%) scale(4)';
+        ring.style.opacity = '0';
+      });
+    });
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') location.href = '01-anatomy.html';
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>04 · PLG Funnel · EMA</title>
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+  body {
+    background:
+      radial-gradient(ellipse at 80% 20%, rgba(95, 212, 255, 0.08) 0%, transparent 55%),
+      radial-gradient(ellipse at 10% 80%, rgba(146, 86, 217, 0.07) 0%, transparent 55%),
+      linear-gradient(180deg, #050b18 0%, #0a1326 100%);
+  }
+  .bg-grid-dataviz {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image:
+      linear-gradient(rgba(95, 212, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(95, 212, 255, 0.04) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+  }
+
+  .funnel-eyebrow { color: var(--term-cyan); }
+  .funnel-title .accent { color: var(--term-cyan); text-shadow: 0 0 22px rgba(95, 212, 255, 0.4); }
+
+  .funnel-stages {
+    display: flex; flex-direction: column; gap: 0.8rem;
+    flex: 1; min-height: 0; justify-content: center;
+  }
+  .stg {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 2rem;
+    align-items: center;
+    height: 70px;
+  }
+  .stg .bar {
+    height: 70px; position: relative; border-radius: 4px;
+    background: linear-gradient(90deg, rgba(95, 212, 255, 0.15) 0%, rgba(95, 212, 255, 0.04) 100%);
+    border: 1px solid rgba(95, 212, 255, 0.25); overflow: hidden;
+    display: flex; align-items: center; padding: 0 1.6rem;
+  }
+  .stg .fill {
+    position: absolute; inset: 0; right: auto;
+    height: 100%; background: linear-gradient(90deg, var(--term-cyan), rgba(95, 212, 255, 0.45));
+    transform-origin: left; transform: scaleX(0);
+    animation: fillGrow 1.4s 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    width: 100%;
+  }
+  @keyframes fillGrow { to { transform: scaleX(var(--scale, 1)); } }
+  .stg .label {
+    position: relative; z-index: 2;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700; font-size: clamp(1.6rem, 2.4vw, 2.2rem);
+    color: var(--dust); letter-spacing: -0.02em;
+  }
+  .stg .count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(2.4rem, 3.5vw, 3.2rem); font-weight: 700;
+    color: var(--term-cyan); letter-spacing: -0.02em;
+    text-shadow: 0 0 16px rgba(95, 212, 255, 0.45);
+    min-width: 130px; text-align: right;
+  }
+
+  .conv-row {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 2px; background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    margin-top: 1.4rem;
+  }
+  .cv {
+    padding: 1.4rem 1.6rem; background: rgba(6, 10, 20, 0.7);
+  }
+  .cv .lbl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.95rem; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--dust-faint); margin-bottom: 0.5rem; font-weight: 600;
+  }
+  .cv .val {
+    font-size: clamp(2.6rem, 4vw, 3.6rem); font-weight: 800;
+    color: var(--term-cyan); font-family: 'Inter', sans-serif;
+    letter-spacing: -0.04em; line-height: 1;
+  }
+  .cv .delta {
+    font-size: 0.95rem; margin-top: 0.4rem;
+    font-family: 'JetBrains Mono', monospace; letter-spacing: 0.1em;
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-grid-dataviz"></div>
+
+<nav class="topnav">
+  <div class="logo">
+    <span class="a">Adobe</span>
+    <span class="sep">/</span>
+    <span>Experience Modernization Agent</span>
+  </div>
+  <div class="slide-counter">SLIDE · 4 / 8</div>
+  <div class="topnav-actions">
+    <a class="nav-link" href="05-adoption.html">← Prev</a>
+    <a class="nav-link" href="06-reception.html">Next →</a>
+  </div>
+</nav>
+
+<aside class="side-dots">
+  <a href="index.html" data-label="Cover"></a>
+  <a href="01-anatomy.html" data-label="1. Anatomy"></a>
+  <a href="02-jobs.html" data-label="2. Jobs"></a>
+  <a href="05-adoption.html" data-label="3. Adoption"></a>
+  <a href="03-funnel.html" class="current" data-label="4. PLG funnel"></a>
+  <a href="06-reception.html" data-label="5. Reception"></a>
+  <a href="04-bridge.html" data-label="6. Bridge"></a>
+  <a href="04b-slicc.html" data-label="7. SLICC"></a>
+  <a href="07-lab.html" data-label="8. Lab"></a>
+</aside>
+
+<main>
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow funnel-eyebrow reveal">04 · PRODUCT-LED GROWTH</div>
+      <h1 class="slide-title funnel-title reveal reveal-1">
+        The funnel <span class="accent">tells the truth.</span>
+      </h1>
+
+      <div class="funnel-stages reveal reveal-2">
+        <div class="stg">
+          <div class="bar"><div class="fill" style="--scale: 1;"></div>
+            <div class="label">Contacted</div>
+          </div>
+          <div class="count">257</div>
+        </div>
+        <div class="stg">
+          <div class="bar"><div class="fill" style="--scale: 0.887;"></div>
+            <div class="label">Provisioned</div>
+          </div>
+          <div class="count">228</div>
+        </div>
+        <div class="stg">
+          <div class="bar"><div class="fill" style="--scale: 0.439;"></div>
+            <div class="label">Active</div>
+          </div>
+          <div class="count">113</div>
+        </div>
+        <div class="stg">
+          <div class="bar"><div class="fill" style="--scale: 0.101;"></div>
+            <div class="label">Building</div>
+          </div>
+          <div class="count">26</div>
+        </div>
+        <div class="stg">
+          <div class="bar"><div class="fill" style="--scale: 0.019;"></div>
+            <div class="label">Live in production</div>
+          </div>
+          <div class="count">5</div>
+        </div>
+      </div>
+
+      <div class="conv-row reveal reveal-3">
+        <div class="cv">
+          <div class="lbl">Provisioning</div>
+          <div class="val">89%</div>
+          <div class="delta" style="color:#28d278;">healthy</div>
+        </div>
+        <div class="cv">
+          <div class="lbl">Activation</div>
+          <div class="val">50%</div>
+          <div class="delta" style="color: var(--term-amber);">friction zone</div>
+        </div>
+        <div class="cv">
+          <div class="lbl">Top → Live</div>
+          <div class="val">1.9%</div>
+          <div class="delta" style="color: rgba(255, 100, 100, 0.85);">honest read</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="slide-foot">
+  <a href="05-adoption.html">← Prev</a>
+  <a href="06-reception.html">Next →</a>
+</div>
+
+<script src="assets/effects.js"></script>
+<script>
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') location.href = '06-reception.html';
+    if (e.key === 'ArrowLeft') location.href = '05-adoption.html';
+  });
+</script>
+
+</body>
+</html>

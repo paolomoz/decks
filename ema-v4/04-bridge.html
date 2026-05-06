@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>06 · Bridge · EMA</title>
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+  body {
+    background:
+      radial-gradient(ellipse at 20% 100%, rgba(28, 25, 23, 0.6) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 0%, rgba(255, 217, 138, 0.1) 0%, transparent 55%),
+      linear-gradient(180deg, #0c1733 0%, #1a1410 60%, #2a1f08 100%);
+  }
+
+  .bridge-eyebrow { color: var(--amber); }
+  .bridge-title .accent { color: var(--amber); }
+  .bridge-title .serif {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic; font-weight: 500;
+    background: linear-gradient(180deg, var(--amber) 0%, #c9822d 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .bridge-grid {
+    display: grid; grid-template-rows: 1fr auto;
+    gap: 2.4rem; flex: 1; min-height: 0;
+  }
+
+  /* Bridge stage */
+  .bridge-stage {
+    position: relative;
+    border-top: 1px solid rgba(255, 217, 138, 0.15);
+    border-bottom: 1px solid rgba(255, 217, 138, 0.15);
+    min-height: 0;
+  }
+  .bridge-stage::before, .bridge-stage::after {
+    content: ''; position: absolute; bottom: 0; width: 30%; height: 70%;
+  }
+  .bridge-stage::before {
+    left: 0;
+    background: linear-gradient(180deg, transparent 0%, rgba(20, 30, 60, 0.6) 100%);
+    clip-path: polygon(0 70%, 30% 30%, 60% 50%, 90% 35%, 100% 50%, 100% 100%, 0 100%);
+  }
+  .bridge-stage::after {
+    right: 0;
+    background: linear-gradient(180deg, transparent 0%, rgba(80, 50, 10, 0.7) 100%);
+    clip-path: polygon(0 50%, 20% 35%, 50% 50%, 80% 25%, 100% 60%, 100% 100%, 0 100%);
+  }
+
+  .island-label {
+    position: absolute; bottom: 2rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1rem; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--dust-faint); padding: 0.7rem 1.2rem;
+    background: rgba(0, 0, 0, 0.6); border-radius: 4px; z-index: 5;
+    font-weight: 600;
+  }
+  .island-label.left { left: 3%; border-left: 3px solid #5fd4ff; }
+  .island-label.right { right: 3%; border-left: 3px solid var(--amber); }
+  .island-label .big {
+    display: block;
+    font-size: 1.8rem; color: var(--dust);
+    margin-top: 0.4rem; letter-spacing: -0.01em;
+    text-transform: none; font-family: 'Inter', sans-serif; font-weight: 800;
+  }
+
+  .bridge-line {
+    position: absolute; top: 50%; left: 12%; right: 12%; height: 3px;
+    background: linear-gradient(90deg, rgba(95, 212, 255, 0.7) 0%, var(--amber) 50%, rgba(255, 217, 138, 0.7) 100%);
+    transform: translateY(-50%);
+    box-shadow: 0 0 16px rgba(255, 217, 138, 0.4);
+  }
+  .bridge-line::before, .bridge-line::after {
+    content: ''; position: absolute; top: -6px; width: 14px; height: 14px;
+    border-radius: 50%; background: var(--amber);
+    box-shadow: 0 0 18px var(--amber);
+  }
+  .bridge-line::before { left: 0; background: #5fd4ff; box-shadow: 0 0 18px #5fd4ff; }
+  .bridge-line::after { right: 0; }
+
+  .pulse {
+    position: absolute; top: 50%; width: 10px; height: 10px;
+    border-radius: 50%; background: var(--amber);
+    box-shadow: 0 0 16px var(--amber);
+    transform: translateY(-50%);
+    animation: travel 3.4s linear infinite;
+  }
+  .pulse:nth-child(2) { animation-delay: 0.85s; background: #5fd4ff; box-shadow: 0 0 16px #5fd4ff; }
+  .pulse:nth-child(3) { animation-delay: 1.7s; background: #FFD98A; }
+  .pulse:nth-child(4) { animation-delay: 2.5s; background: #c9822d; }
+  .pulse:nth-child(5) { animation-delay: 0.4s; background: #fff; box-shadow: 0 0 16px #fff; width: 6px; height: 6px; }
+  .pulse:nth-child(6) { animation-delay: 1.3s; background: #fff; box-shadow: 0 0 16px #fff; width: 6px; height: 6px; }
+  @keyframes travel {
+    from { left: 12%; opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    to { left: 88%; opacity: 0; }
+  }
+
+  .keystone {
+    position: absolute; top: calc(50% - 36px);
+    padding: 0.55rem 0.9rem;
+    background: rgba(20, 14, 6, 0.92);
+    border: 1px solid rgba(255, 217, 138, 0.3);
+    border-radius: 5px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.95rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--amber); text-align: center; font-weight: 600;
+    backdrop-filter: blur(8px);
+  }
+  .keystone::before {
+    content: ''; position: absolute; left: 50%; bottom: -10px;
+    transform: translateX(-50%); width: 1px; height: 10px;
+    background: rgba(255, 217, 138, 0.5);
+  }
+  .keystone.k1 { left: 22%; }
+  .keystone.k2 { left: 42%; }
+  .keystone.k3 { left: 62%; }
+  .keystone.k4 { left: 78%; }
+
+  /* Telenet quote */
+  .telenet-quote {
+    padding: 2rem 2.4rem 2rem 2.6rem;
+    background: rgba(6, 10, 20, 0.55);
+    border: 1px solid rgba(255, 217, 138, 0.18);
+    border-left: 4px solid var(--amber);
+    border-radius: 5px;
+    backdrop-filter: blur(12px);
+    position: relative;
+    display: flex; align-items: center; gap: 2.4rem;
+  }
+  .telenet-quote::before {
+    content: '"'; position: absolute; top: -34px; left: 1.4rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 6rem; color: var(--amber); line-height: 1;
+    background: #1a1410; padding: 0 0.7rem;
+  }
+  .telenet-quote .q-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic; font-size: clamp(1.8rem, 2.6vw, 2.4rem);
+    line-height: 1.35;
+    color: var(--dust); flex: 1;
+  }
+  .telenet-quote .q-text strong {
+    color: var(--amber); font-style: normal;
+    font-family: 'Inter', sans-serif; font-weight: 700;
+  }
+  .telenet-quote .q-attr {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1rem; letter-spacing: 0.13em; text-transform: uppercase;
+    color: var(--dust-faint); white-space: nowrap;
+    border-left: 1px solid rgba(255, 217, 138, 0.22);
+    padding-left: 1.8rem; line-height: 1.6;
+    font-weight: 600;
+  }
+
+  @media (max-width: 980px) {
+    .telenet-quote { flex-direction: column; align-items: flex-start; gap: 1rem; }
+    .telenet-quote .q-attr { padding-left: 0; border-left: none; }
+  }
+</style>
+</head>
+<body>
+
+<canvas class="bg-canvas" id="dust"></canvas>
+
+<nav class="topnav">
+  <div class="logo">
+    <span class="a">Adobe</span>
+    <span class="sep">/</span>
+    <span>Experience Modernization Agent</span>
+  </div>
+  <div class="slide-counter">SLIDE · 6 / 8</div>
+  <div class="topnav-actions">
+    <a class="nav-link" href="06-reception.html">← Prev</a>
+    <a class="nav-link" href="04b-slicc.html">Next →</a>
+  </div>
+</nav>
+
+<aside class="side-dots">
+  <a href="index.html" data-label="Cover"></a>
+  <a href="01-anatomy.html" data-label="1. Anatomy"></a>
+  <a href="02-jobs.html" data-label="2. Jobs"></a>
+  <a href="05-adoption.html" data-label="3. Adoption"></a>
+  <a href="03-funnel.html" data-label="4. PLG funnel"></a>
+  <a href="06-reception.html" data-label="5. Reception"></a>
+  <a href="04-bridge.html" class="current" data-label="6. Bridge"></a>
+  <a href="04b-slicc.html" data-label="7. SLICC"></a>
+  <a href="07-lab.html" data-label="8. Lab"></a>
+</aside>
+
+<main>
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow bridge-eyebrow reveal">06 · BRIDGE</div>
+      <h1 class="slide-title bridge-title reveal reveal-1">
+        EMA is a <span class="serif">bridge</span>,<br>
+        not a <span class="accent">destination.</span>
+      </h1>
+
+      <div class="bridge-grid">
+        <div class="bridge-stage reveal reveal-2">
+          <div class="island-label left">
+            Today
+            <span class="big">Closed DXP</span>
+          </div>
+          <div class="island-label right">
+            Tomorrow
+            <span class="big">Agent-native</span>
+          </div>
+
+          <div class="bridge-line"></div>
+          <div class="pulse"></div>
+          <div class="pulse"></div>
+          <div class="pulse"></div>
+          <div class="pulse"></div>
+          <div class="pulse"></div>
+          <div class="pulse"></div>
+
+          <div class="keystone k1">aemcoder</div>
+          <div class="keystone k2">SLICC</div>
+          <div class="keystone k3">skills</div>
+          <div class="keystone k4">primitives</div>
+        </div>
+
+        <div class="telenet-quote reveal reveal-3">
+          <div class="q-text">
+            How is this <strong>different</strong> from Claude Code? We just spent 15 minutes
+            setting up Edge Delivery Services from scratch with our own AI.
+          </div>
+          <div class="q-attr">— Telenet · technical lead<br>April 2026</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="slide-foot">
+  <a href="06-reception.html">← Prev</a>
+  <a href="04b-slicc.html">Next →</a>
+</div>
+
+<script src="assets/effects.js"></script>
+<script>
+  startStarfield('dust', { density: 0.5, color1: '#FFD98A', color2: '#c9822d', color3: '#5fd4ff', drift: 0.02 });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') location.href = '04b-slicc.html';
+    if (e.key === 'ArrowLeft') location.href = '06-reception.html';
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>01 · Anatomy · EMA</title>
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+  body {
+    background:
+      radial-gradient(ellipse at 20% 0%, rgba(40, 210, 120, 0.05) 0%, transparent 55%),
+      radial-gradient(ellipse at 80% 100%, rgba(95, 212, 255, 0.05) 0%, transparent 55%),
+      var(--term-bg);
+  }
+  .scanlines {
+    position: fixed; inset: 0; z-index: 1; pointer-events: none;
+    background: repeating-linear-gradient(0deg, rgba(255,255,255,0.012) 0 1px, transparent 1px 3px);
+  }
+
+  .anat-eyebrow { color: var(--term-green); }
+  .anat-title .accent { color: var(--term-green); text-shadow: 0 0 22px rgba(40, 210, 120, 0.35); }
+
+  .stack {
+    display: flex; flex-direction: column; gap: 1rem;
+    flex: 1; min-height: 0; justify-content: center;
+  }
+  .layer {
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-left: 6px solid var(--lc, var(--term-green));
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.005));
+    padding: 1.6rem 2rem;
+    border-radius: 6px;
+    transition: all 0.3s;
+    display: grid; grid-template-columns: auto 1fr auto; gap: 2rem; align-items: center;
+  }
+  .layer:hover {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.01));
+    transform: translateX(6px);
+  }
+  .layer.l3 { --lc: #c084fc; }
+  .layer.l2 { --lc: var(--term-green); }
+  .layer.l1 { --lc: var(--red2); }
+
+  .layer-id {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.6rem; letter-spacing: 0.12em; font-weight: 700;
+    padding: 0.5rem 1rem; border-radius: 5px;
+    background: rgba(255, 255, 255, 0.04); color: var(--lc);
+    border: 2px solid var(--lc);
+  }
+  .layer-name {
+    font-family: 'Inter', sans-serif;
+    font-weight: 800; font-size: clamp(2.2rem, 3.5vw, 3rem);
+    color: var(--dust); letter-spacing: -0.025em; line-height: 1.05;
+  }
+  .layer-name .sub {
+    display: block;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic; font-weight: 500;
+    font-size: 0.55em; color: var(--lc);
+    margin-top: 0.3rem; letter-spacing: -0.01em;
+  }
+  .layer-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.95rem; letter-spacing: 0.16em;
+    color: var(--dust-faint); text-transform: uppercase;
+    text-align: right;
+  }
+
+  @media (max-width: 760px) {
+    .layer { grid-template-columns: auto 1fr; gap: 1rem; padding: 1.2rem; }
+    .layer-tag { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="scanlines"></div>
+
+<nav class="topnav">
+  <div class="logo">
+    <span class="a">Adobe</span>
+    <span class="sep">/</span>
+    <span>Experience Modernization Agent</span>
+  </div>
+  <div class="slide-counter">SLIDE · 1 / 8</div>
+  <div class="topnav-actions">
+    <a class="nav-link" href="index.html">← Cover</a>
+    <a class="nav-link" href="02-jobs.html">Next →</a>
+  </div>
+</nav>
+
+<aside class="side-dots">
+  <a href="index.html" data-label="Cover"></a>
+  <a href="01-anatomy.html" class="current" data-label="1. Anatomy"></a>
+  <a href="02-jobs.html" data-label="2. Jobs"></a>
+  <a href="05-adoption.html" data-label="3. Adoption"></a>
+  <a href="03-funnel.html" data-label="4. PLG funnel"></a>
+  <a href="06-reception.html" data-label="5. Reception"></a>
+  <a href="04-bridge.html" data-label="6. Bridge"></a>
+  <a href="04b-slicc.html" data-label="7. SLICC"></a>
+  <a href="07-lab.html" data-label="8. Lab"></a>
+</aside>
+
+<main>
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow anat-eyebrow reveal">01 · ANATOMY</div>
+      <h1 class="slide-title anat-title reveal reveal-1">
+        Three layers, <span class="accent">one continuum.</span>
+      </h1>
+
+      <div class="stack">
+        <div class="layer l3 reveal reveal-2">
+          <span class="layer-id">L3</span>
+          <span class="layer-name">aemcoder
+            <span class="sub">the agent</span>
+          </span>
+          <span class="layer-tag">hosted · managed</span>
+        </div>
+
+        <div class="layer l2 reveal reveal-3">
+          <span class="layer-id">L2</span>
+          <span class="layer-name">skills + evals
+            <span class="sub">the library</span>
+          </span>
+          <span class="layer-tag">open · reusable</span>
+        </div>
+
+        <div class="layer l1 reveal reveal-4">
+          <span class="layer-id">L1</span>
+          <span class="layer-name">platform primitives
+            <span class="sub">the substrate</span>
+          </span>
+          <span class="layer-tag">EDS · DA · CDN</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="slide-foot">
+  <a href="index.html">← Cover</a>
+  <a href="02-jobs.html">Next →</a>
+</div>
+
+<script src="assets/effects.js"></script>
+<script>
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') location.href = '02-jobs.html';
+    if (e.key === 'ArrowLeft') location.href = 'index.html';
+  });
+</script>
+
+</body>
+</html>
