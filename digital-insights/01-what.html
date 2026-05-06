@@ -8,16 +8,20 @@
 <style>
   body { background: linear-gradient(180deg, #060A14 0%, #0a0f24 60%, #120a26 100%); }
 
+  /* tighter title so pillars fit */
+  .slide-title { font-size: clamp(2.6rem, 5vw, 4.2rem); margin-bottom: 0.6rem; }
+  .slide-sub { font-size: clamp(1.05rem, 1.4vw, 1.35rem); margin-bottom: 0.6rem; }
+
   .what-grid {
     display: grid; grid-template-columns: repeat(3, 1fr);
-    gap: 1.8rem; margin-top: 1rem;
+    gap: 1.4rem; margin-top: 0.8rem;
     flex: 1; min-height: 0; align-items: stretch;
   }
   .pillar {
     background: rgba(6, 10, 20, 0.55);
     border: 1px solid rgba(95, 212, 255, 0.2);
     border-radius: 8px;
-    padding: 2.4rem 2rem;
+    padding: 1.6rem 1.6rem;
     display: flex; flex-direction: column;
     position: relative; overflow: hidden;
     backdrop-filter: blur(6px);
@@ -29,15 +33,15 @@
   .pillar.p2::before { background: linear-gradient(90deg, var(--violet), var(--cyan)); }
   .pillar-num {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.95rem; color: var(--violet);
-    letter-spacing: 0.22em; margin-bottom: 1.4rem; font-weight: 600;
+    font-size: 0.85rem; color: var(--violet);
+    letter-spacing: 0.22em; margin-bottom: 0.9rem; font-weight: 600;
   }
   .pillar-verb {
     font-family: 'Inter', sans-serif;
     font-weight: 800;
-    font-size: clamp(3.2rem, 5.5vw, 5rem);
+    font-size: clamp(2.2rem, 4vw, 3.4rem);
     line-height: 0.95; letter-spacing: -0.04em;
-    margin-bottom: 1.2rem;
+    margin-bottom: 0.7rem;
   }
   .pillar.p1 .pillar-verb { color: var(--cyan); }
   .pillar.p2 .pillar-verb { color: var(--violet); }
@@ -47,13 +51,13 @@
     -webkit-text-fill-color: transparent;
   }
   .pillar-line {
-    font-size: clamp(1.2rem, 1.6vw, 1.5rem);
-    color: var(--dust-dim); line-height: 1.45;
+    font-size: clamp(1rem, 1.3vw, 1.2rem);
+    color: var(--dust-dim); line-height: 1.4;
   }
 
   .what-strip {
-    margin-top: 1.6rem;
-    padding: 1.1rem 1.6rem;
+    margin-top: 1rem;
+    padding: 0.85rem 1.4rem;
     background: rgba(6, 10, 20, 0.55);
     border: 1px solid rgba(192, 132, 252, 0.22);
     border-radius: 5px;

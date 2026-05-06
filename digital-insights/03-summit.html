@@ -13,16 +13,22 @@
     position: absolute;
     top: 50%; left: 50%;
     transform: translate(-50%, -50%);
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 600; font-style: italic;
-    font-size: clamp(16rem, 30vw, 34rem);
-    line-height: 1; letter-spacing: -0.04em;
+    font-family: 'Inter', sans-serif;
+    font-weight: 900; font-style: normal;
+    font-size: clamp(14rem, 26vw, 30rem);
+    line-height: 1; letter-spacing: -0.06em;
     background: linear-gradient(135deg, var(--cyan) 0%, var(--violet) 100%);
     -webkit-background-clip: text; background-clip: text;
     -webkit-text-fill-color: transparent;
-    opacity: 0.06;
+    opacity: 0.22;
     pointer-events: none; user-select: none;
     z-index: 0;
+    filter: drop-shadow(0 0 60px rgba(95, 212, 255, 0.25));
+    animation: summitPulse 6s ease-in-out infinite;
+  }
+  @keyframes summitPulse {
+    0%, 100% { opacity: 0.18; }
+    50%      { opacity: 0.28; }
   }
 
   .slide-inner { position: relative; z-index: 1; }
