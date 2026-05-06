@@ -3,70 +3,67 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>04 · Demand · Digital Insights</title>
+<title>05 · Demand · Digital Insights</title>
 <link rel="stylesheet" href="assets/styles.css">
 <style>
   body { background: linear-gradient(180deg, #060A14 0%, #0a0f24 55%, #160c2c 100%); }
 
   .demand-grid {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 2.4rem; margin-top: 1rem;
-    flex: 1; min-height: 0;
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1.8rem; margin-top: 1.4rem;
+    flex: 1; min-height: 0; align-items: stretch;
   }
-  .demand-col { display: flex; flex-direction: column; justify-content: center; }
-  .col-eyebrow {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.95rem; letter-spacing: 0.24em; text-transform: uppercase;
-    margin-bottom: 1.4rem; padding-bottom: 0.7rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    font-weight: 600;
+  .stat-card {
+    padding: 1.6rem 1.8rem;
+    border-left: 4px solid var(--cyan);
+    background: rgba(95, 212, 255, 0.06);
+    border-radius: 0 8px 8px 0;
+    backdrop-filter: blur(6px);
+    display: flex; flex-direction: column; justify-content: center;
   }
-  .demand-col.left  .col-eyebrow { color: var(--cyan);   border-bottom-color: rgba(95, 212, 255, 0.3); }
-  .demand-col.right .col-eyebrow { color: var(--violet); border-bottom-color: rgba(192, 132, 252, 0.3); }
-
-  .stat-row { display: flex; flex-direction: column; gap: 0.6rem; }
-  .stat {
-    display: flex; align-items: baseline; gap: 1.2rem;
-    padding: 0.7rem 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  }
-  .stat:last-child { border-bottom: none; }
+  .stat-card.violet { border-left-color: var(--violet); background: rgba(192, 132, 252, 0.06); }
+  .stat-card.bright { border-left-color: var(--cyan-bright); background: rgba(170, 233, 255, 0.06); }
   .stat-num {
     font-family: 'Inter', sans-serif;
-    font-weight: 200; font-size: clamp(3.6rem, 6.5vw, 5.4rem);
+    font-weight: 200; font-size: clamp(5.5rem, 10vw, 9rem);
     line-height: 0.92; letter-spacing: -0.06em;
     color: var(--cyan);
-    flex-shrink: 0; min-width: 6.5ch;
   }
-  .demand-col.right .stat-num { color: var(--violet); }
-  .stat-num .plus { font-size: 0.6em; vertical-align: 0.2em; font-weight: 400; }
-  .stat-num .pct  { font-size: 0.5em; vertical-align: 0.4em; font-weight: 400; margin-left: 0.05em; }
+  .stat-card.violet .stat-num { color: var(--violet); }
+  .stat-card.bright .stat-num { color: var(--cyan-bright); }
+  .stat-num .arrow { font-weight: 300; color: var(--dust-faint); margin: 0 0.05em; }
   .stat-lbl {
     font-family: 'Inter', sans-serif;
-    font-size: clamp(1.1rem, 1.5vw, 1.4rem);
-    font-weight: 500; color: var(--dust);
-    line-height: 1.3;
+    font-size: clamp(1.2rem, 1.5vw, 1.5rem);
+    font-weight: 600; color: var(--dust);
+    margin-top: 0.5rem;
   }
-  .stat-lbl .sm {
-    display: block;
+  .stat-cap {
     font-family: 'Cormorant Garamond', serif;
-    font-style: italic; font-weight: 500;
-    font-size: 0.78em; color: var(--dust-faint);
-    margin-top: 0.2rem;
+    font-style: italic;
+    font-size: clamp(1rem, 1.2vw, 1.15rem);
+    color: var(--dust-faint); margin-top: 0.3rem;
+    line-height: 1.4;
   }
 
   .demand-strip {
-    margin-top: 1.4rem;
-    padding: 0.85rem 1.2rem;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    background: rgba(6, 10, 20, 0.55);
+    margin-top: 1.6rem;
+    padding: 1rem 1.4rem;
+    border: 1px solid rgba(192, 132, 252, 0.22);
+    background: rgba(6, 10, 20, 0.6);
     border-radius: 5px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.95rem; color: var(--dust-dim);
-    letter-spacing: 0.04em; text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(1.3rem, 1.8vw, 1.65rem);
+    color: var(--dust-dim);
+    text-align: center;
+    line-height: 1.4;
   }
-  .demand-strip strong { color: var(--cyan); font-weight: 700; }
-  .demand-strip .sep { color: var(--violet); margin: 0 0.7rem; }
+  .demand-strip strong {
+    font-style: normal; font-family: 'Inter', sans-serif;
+    color: var(--cyan); font-weight: 700;
+  }
+  .demand-strip .v { color: var(--violet); font-weight: 700; font-style: normal; font-family: 'Inter', sans-serif; }
 </style>
 </head>
 <body>
@@ -79,7 +76,7 @@
     <span class="sep">/</span>
     <span>Digital Insights</span>
   </div>
-  <div class="slide-counter">SLIDE · 4 / 5</div>
+  <div class="slide-counter">SLIDE · 5 / 6</div>
   <div class="topnav-actions">
     <a class="nav-link" href="03-summit.html">← Prev</a>
     <a class="nav-link" href="05-roadmap.html">Next →</a>
@@ -89,16 +86,17 @@
 <aside class="side-dots">
   <a href="index.html" data-label="Cover"></a>
   <a href="01-what.html" data-label="1. What it is"></a>
-  <a href="02-signals.html" data-label="2. Deal signals"></a>
-  <a href="03-summit.html" data-label="3. Summit"></a>
-  <a href="04-demand.html" class="current" data-label="4. Demand"></a>
-  <a href="05-roadmap.html" data-label="5. Roadmap"></a>
+  <a href="01b-report.html" data-label="2. The report"></a>
+  <a href="02-signals.html" data-label="3. Deal signals"></a>
+  <a href="03-summit.html" data-label="4. Summit"></a>
+  <a href="04-demand.html" class="current" data-label="5. Demand"></a>
+  <a href="05-roadmap.html" data-label="6. Roadmap"></a>
 </aside>
 
 <main>
   <section class="slide">
     <div class="slide-inner">
-      <div class="eyebrow reveal">04 · ADOPTION & DEMAND</div>
+      <div class="eyebrow reveal">05 · ADOPTION & DEMAND</div>
       <h1 class="slide-title reveal reveal-1">
         Not just a sales tool<br>
         <span class="accent-violet serif">anymore.</span>
@@ -108,47 +106,25 @@
       </p>
 
       <div class="demand-grid">
-        <div class="demand-col left reveal reveal-3">
-          <div class="col-eyebrow">The engine</div>
-          <div class="stat-row">
-            <div class="stat">
-              <div class="stat-num">~3,000</div>
-              <div class="stat-lbl">reports generated <span class="sm">across all teams &amp; regions</span></div>
-            </div>
-            <div class="stat">
-              <div class="stat-num">3→4</div>
-              <div class="stat-lbl">regions live <span class="sm">US · EMEA · JAPAC → +UAE</span></div>
-            </div>
-            <div class="stat">
-              <div class="stat-num">~1,600</div>
-              <div class="stat-lbl">Summit reports reused by BDRs <span class="sm">USA + Australia post-Summit outreach</span></div>
-            </div>
-          </div>
+        <div class="stat-card reveal reveal-3">
+          <div class="stat-num">~3,000</div>
+          <div class="stat-lbl">reports generated</div>
+          <div class="stat-cap">across all teams &amp; regions</div>
         </div>
-
-        <div class="demand-col right reveal reveal-4">
-          <div class="col-eyebrow">Request intelligence</div>
-          <div class="stat-row">
-            <div class="stat">
-              <div class="stat-num">+1283<span class="pct">%</span></div>
-              <div class="stat-lbl">Germany <span class="sm">market emergence signal</span></div>
-            </div>
-            <div class="stat">
-              <div class="stat-num">+950<span class="pct">%</span></div>
-              <div class="stat-lbl">Sitecore displacement <span class="sm">competitive window opening</span></div>
-            </div>
-            <div class="stat">
-              <div class="stat-num">+302<span class="pct">%</span></div>
-              <div class="stat-lbl">Content velocity <span class="sm">CSC + Workfront pull signal</span></div>
-            </div>
-          </div>
+        <div class="stat-card violet reveal reveal-4">
+          <div class="stat-num">3<span class="arrow">→</span>4</div>
+          <div class="stat-lbl">regions live</div>
+          <div class="stat-cap">US · EMEA · JAPAC → +UAE</div>
+        </div>
+        <div class="stat-card bright reveal reveal-5">
+          <div class="stat-num">~1,600</div>
+          <div class="stat-lbl">Summit reports reused by BDRs</div>
+          <div class="stat-cap">USA + Australia post-Summit outreach</div>
         </div>
       </div>
 
-      <div class="demand-strip reveal reveal-5">
-        <strong>480</strong> requests / 90 days <span class="sep">·</span>
-        <strong>90.7%</strong> data completeness <span class="sep">·</span>
-        <strong>JAPAC Summit next</strong> · 100–200 customers
+      <div class="demand-strip reveal reveal-6">
+        Adopted by <strong>BDRs</strong>, asked for by <span class="v">CSMEs</span>, demoed by <strong>product specialists</strong>.
       </div>
     </div>
   </section>

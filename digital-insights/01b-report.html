@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>02 · The Report · Digital Insights</title>
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+  body { background: linear-gradient(180deg, #060A14 0%, #0a0f24 55%, #120a26 100%); }
+
+  /* ── headline area, tighter ── */
+  .slide-title { font-size: clamp(2.8rem, 5.4vw, 4.4rem); margin-bottom: 0.5rem; }
+  .slide-sub { font-size: clamp(1.2rem, 1.6vw, 1.5rem); margin-bottom: 1rem; }
+
+  /* ── REPORT MOCK ───────────────────────── */
+  .report {
+    flex: 1; min-height: 0;
+    display: grid; grid-template-rows: auto 1fr auto;
+    background: rgba(244, 240, 230, 0.96);
+    color: #14110d;
+    border-radius: 10px;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(95, 212, 255, 0.2);
+    overflow: hidden;
+    position: relative;
+  }
+  .report::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px;
+    background: linear-gradient(90deg, var(--cyan), var(--violet));
+  }
+  .rep-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.1rem 1.6rem 0.9rem;
+    border-bottom: 1px solid rgba(20, 17, 13, 0.12);
+  }
+  .rep-brand {
+    font-family: 'Inter', sans-serif; font-weight: 800;
+    font-size: clamp(1.05rem, 1.4vw, 1.25rem);
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: #14110d;
+  }
+  .rep-brand .pill {
+    display: inline-block; padding: 0.18rem 0.6rem;
+    background: linear-gradient(90deg, var(--cyan), var(--violet));
+    color: #fff; border-radius: 4px; margin-right: 0.6rem;
+    font-size: 0.85em;
+  }
+  .rep-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem; color: rgba(20, 17, 13, 0.55);
+    letter-spacing: 0.1em;
+  }
+
+  .rep-body { padding: 1.2rem 1.6rem; display: flex; flex-direction: column; gap: 1rem; min-height: 0; }
+
+  .rep-scores {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 1.2rem;
+  }
+  .score {
+    padding: 1rem 1.1rem;
+    background: #fff;
+    border: 1px solid rgba(20, 17, 13, 0.1);
+    border-radius: 6px;
+    border-left: 4px solid var(--cyan);
+  }
+  .score.s2 { border-left-color: var(--violet); }
+  .score.s3 { border-left-color: #d44; }
+  .score.s4 { border-left-color: #c89030; }
+  .score-lbl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem; letter-spacing: 0.16em; text-transform: uppercase;
+    color: rgba(20, 17, 13, 0.6); font-weight: 600;
+    margin-bottom: 0.4rem;
+  }
+  .score-num {
+    font-family: 'Inter', sans-serif;
+    font-weight: 200; font-size: clamp(2.6rem, 4.8vw, 4rem);
+    line-height: 1; color: #14110d; letter-spacing: -0.04em;
+  }
+  .score-num .of {
+    font-size: 0.4em; color: rgba(20, 17, 13, 0.42); font-weight: 400;
+    margin-left: 0.15em; vertical-align: 0.5em;
+  }
+  .score-bar {
+    margin-top: 0.5rem; height: 6px;
+    background: rgba(20, 17, 13, 0.08);
+    border-radius: 3px; overflow: hidden;
+  }
+  .score-bar span { display: block; height: 100%; background: var(--cyan-deep); }
+  .score.s2 .score-bar span { background: var(--violet-deep); }
+  .score.s3 .score-bar span { background: #d44; }
+  .score.s4 .score-bar span { background: #c89030; }
+  .score-flag {
+    margin-top: 0.45rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase;
+    color: #d44; font-weight: 700;
+  }
+  .score.ok .score-flag { color: #1d8c5a; }
+
+  /* opportunity strip */
+  .rep-opp {
+    display: flex; align-items: center; gap: 1.6rem;
+    padding: 1rem 1.4rem;
+    background: linear-gradient(90deg, rgba(95, 212, 255, 0.12), rgba(192, 132, 252, 0.12));
+    border: 1px solid rgba(95, 212, 255, 0.4);
+    border-radius: 6px;
+  }
+  .opp-lbl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: rgba(20, 17, 13, 0.6); font-weight: 600;
+    border-right: 1px solid rgba(20, 17, 13, 0.18);
+    padding-right: 1.6rem;
+  }
+  .opp-num {
+    font-family: 'Inter', sans-serif;
+    font-weight: 800; font-size: clamp(2.2rem, 3.8vw, 3rem);
+    line-height: 1; letter-spacing: -0.03em;
+    background: linear-gradient(135deg, var(--cyan-deep), var(--violet-deep));
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .opp-cap {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(1rem, 1.3vw, 1.2rem);
+    color: rgba(20, 17, 13, 0.7);
+    line-height: 1.3; flex: 1;
+  }
+
+  /* solutions row */
+  .rep-foot {
+    padding: 0.95rem 1.6rem 1.2rem;
+    background: #14110d; color: var(--dust);
+  }
+  .soln-lbl {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--cyan); font-weight: 600;
+    margin-bottom: 0.6rem;
+  }
+  .soln-row {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+  .soln {
+    padding: 0.8rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-left: 3px solid var(--cyan);
+    border-radius: 0 5px 5px 0;
+  }
+  .soln.s2 { border-left-color: var(--violet); }
+  .soln.s3 { border-left-color: var(--cyan-bright); }
+  .soln-name {
+    font-family: 'Inter', sans-serif; font-weight: 800;
+    font-size: clamp(1.1rem, 1.5vw, 1.35rem);
+    color: var(--dust); margin-bottom: 0.15rem;
+  }
+  .soln-fix {
+    font-family: 'Cormorant Garamond', serif; font-style: italic;
+    font-size: clamp(0.95rem, 1.2vw, 1.1rem);
+    color: var(--dust-dim); line-height: 1.3;
+  }
+</style>
+</head>
+<body>
+
+<canvas class="bg-canvas" id="constellation"></canvas>
+
+<nav class="topnav">
+  <div class="logo">
+    <span class="a">Adobe</span>
+    <span class="sep">/</span>
+    <span>Digital Insights</span>
+  </div>
+  <div class="slide-counter">SLIDE · 2 / 6</div>
+  <div class="topnav-actions">
+    <a class="nav-link" href="01-what.html">← Prev</a>
+    <a class="nav-link" href="02-signals.html">Next →</a>
+  </div>
+</nav>
+
+<aside class="side-dots">
+  <a href="index.html" data-label="Cover"></a>
+  <a href="01-what.html" data-label="1. What it is"></a>
+  <a href="01b-report.html" class="current" data-label="2. The report"></a>
+  <a href="02-signals.html" data-label="3. Deal signals"></a>
+  <a href="03-summit.html" data-label="4. Summit"></a>
+  <a href="04-demand.html" data-label="5. Demand"></a>
+  <a href="05-roadmap.html" data-label="6. Roadmap"></a>
+</aside>
+
+<main>
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow reveal">02 · WHAT'S IN THE REPORT</div>
+      <h1 class="slide-title reveal reveal-1">
+        Four scores. One <span class="serif">$ figure.</span><br>
+        Three solutions.
+      </h1>
+      <p class="slide-sub reveal reveal-2">
+        A glance tells the customer where they stand — and what to do about it.
+      </p>
+
+      <div class="report reveal reveal-3">
+        <div class="rep-head">
+          <div class="rep-brand"><span class="pill">DI</span>Brand Visibility Report · Customer X</div>
+          <div class="rep-meta">May 2026 · auto-generated</div>
+        </div>
+
+        <div class="rep-body">
+          <div class="rep-scores">
+            <div class="score">
+              <div class="score-lbl">Performance</div>
+              <div class="score-num">42<span class="of">/100</span></div>
+              <div class="score-bar"><span style="width:42%"></span></div>
+              <div class="score-flag">Critical</div>
+            </div>
+            <div class="score s2 ok">
+              <div class="score-lbl">SEO</div>
+              <div class="score-num">67<span class="of">/100</span></div>
+              <div class="score-bar"><span style="width:67%"></span></div>
+              <div class="score-flag">Healthy</div>
+            </div>
+            <div class="score s3">
+              <div class="score-lbl">LLM Visibility</div>
+              <div class="score-num">31<span class="of">/100</span></div>
+              <div class="score-bar"><span style="width:31%"></span></div>
+              <div class="score-flag">Critical</div>
+            </div>
+            <div class="score s4">
+              <div class="score-lbl">Competition</div>
+              <div class="score-num">58<span class="of">/100</span></div>
+              <div class="score-bar"><span style="width:58%"></span></div>
+              <div class="score-flag">At risk</div>
+            </div>
+          </div>
+
+          <div class="rep-opp">
+            <div class="opp-lbl">Revenue<br>opportunity</div>
+            <div class="opp-num">$4.2M / year</div>
+            <div class="opp-cap">if performance + LLM-visibility gaps are closed.</div>
+          </div>
+        </div>
+
+        <div class="rep-foot">
+          <div class="soln-lbl">Recommended Adobe solutions</div>
+          <div class="soln-row">
+            <div class="soln">
+              <div class="soln-name">AEM</div>
+              <div class="soln-fix">Modernize the experience foundation.</div>
+            </div>
+            <div class="soln s2">
+              <div class="soln-name">Sites Optimizer</div>
+              <div class="soln-fix">Close the performance + SEO gap.</div>
+            </div>
+            <div class="soln s3">
+              <div class="soln-name">LLM Optimizer</div>
+              <div class="soln-fix">Win visibility in AI-driven search.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="slide-foot">
+  <a href="01-what.html">← Prev</a>
+  <a href="02-signals.html">Next →</a>
+</div>
+
+<script src="assets/effects.js"></script>
+<script>
+  startConstellation('constellation', { density: 0.5 });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') location.href = '02-signals.html';
+    if (e.key === 'ArrowLeft') location.href = '01-what.html';
+  });
+</script>
+
+</body>
+</html>

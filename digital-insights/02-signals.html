@@ -8,12 +8,15 @@
 <style>
   body { background: linear-gradient(180deg, #060A14 0%, #0c0e24 55%, #1a0a2c 100%); }
 
+  /* tighter title to fit dense content */
+  .slide-title { font-size: clamp(3rem, 6vw, 5rem); margin-bottom: 1rem; }
+
   .hero-row {
     display: grid; grid-template-columns: 1fr 1fr;
-    gap: 2rem; margin: 0 0 1.4rem; flex-shrink: 0;
+    gap: 1.6rem; margin: 0 0 1rem; flex-shrink: 0;
   }
   .hero-card {
-    padding: 1.6rem 2rem;
+    padding: 1.2rem 1.6rem;
     border: 1px solid rgba(95, 212, 255, 0.28);
     background: rgba(6, 10, 20, 0.6);
     border-radius: 8px;
@@ -28,7 +31,7 @@
   .hero-card.violet::after { background: var(--violet); }
   .hero-num {
     font-family: 'Inter', sans-serif;
-    font-weight: 200; font-size: clamp(7rem, 13vw, 11rem);
+    font-weight: 200; font-size: clamp(5.5rem, 10vw, 8.5rem);
     line-height: 0.9; letter-spacing: -0.06em;
     color: var(--cyan);
   }
@@ -55,7 +58,7 @@
     gap: 1rem; flex: 1; min-height: 0;
   }
   .case {
-    padding: 1.1rem 1.4rem;
+    padding: 0.85rem 1.2rem;
     border-left: 3px solid var(--cyan);
     background: rgba(95, 212, 255, 0.05);
     border-radius: 0 6px 6px 0;
@@ -111,9 +114,9 @@
     <span class="sep">/</span>
     <span>Digital Insights</span>
   </div>
-  <div class="slide-counter">SLIDE · 2 / 5</div>
+  <div class="slide-counter">SLIDE · 3 / 6</div>
   <div class="topnav-actions">
-    <a class="nav-link" href="01-what.html">← Prev</a>
+    <a class="nav-link" href="01b-report.html">← Prev</a>
     <a class="nav-link" href="03-summit.html">Next →</a>
   </div>
 </nav>
@@ -121,16 +124,17 @@
 <aside class="side-dots">
   <a href="index.html" data-label="Cover"></a>
   <a href="01-what.html" data-label="1. What it is"></a>
-  <a href="02-signals.html" class="current" data-label="2. Deal signals"></a>
-  <a href="03-summit.html" data-label="3. Summit"></a>
-  <a href="04-demand.html" data-label="4. Demand"></a>
-  <a href="05-roadmap.html" data-label="5. Roadmap"></a>
+  <a href="01b-report.html" data-label="2. The report"></a>
+  <a href="02-signals.html" class="current" data-label="3. Deal signals"></a>
+  <a href="03-summit.html" data-label="4. Summit"></a>
+  <a href="04-demand.html" data-label="5. Demand"></a>
+  <a href="05-roadmap.html" data-label="6. Roadmap"></a>
 </aside>
 
 <main>
   <section class="slide">
     <div class="slide-inner">
-      <div class="eyebrow reveal">02 · IT MOVES DEALS</div>
+      <div class="eyebrow reveal">03 · IT MOVES DEALS</div>
       <h1 class="slide-title reveal reveal-1">
         DI doesn't just inform —<br>
         <span class="serif">it unsticks.</span>
@@ -138,12 +142,12 @@
 
       <div class="hero-row">
         <div class="hero-card reveal reveal-2">
-          <div class="hero-num">40<span class="pct">%</span></div>
+          <div class="hero-num">41<span class="pct">%</span></div>
           <div class="hero-lbl">of reports show signals of <span class="em">pipeline growth</span></div>
           <div class="hero-cap">New opps · expansion wedges · displacement openings</div>
         </div>
         <div class="hero-card violet reveal reveal-3">
-          <div class="hero-num">30<span class="pct">%</span></div>
+          <div class="hero-num">32<span class="pct">%</span></div>
           <div class="hero-lbl">of reports show signals of <span class="em">deal progression</span></div>
           <div class="hero-cap">Stage advance · ROI unlock · executive sign-off</div>
         </div>
@@ -182,7 +186,7 @@
 </main>
 
 <div class="slide-foot">
-  <a href="01-what.html">← Prev</a>
+  <a href="01b-report.html">← Prev</a>
   <a href="03-summit.html">Next →</a>
 </div>
 
@@ -191,7 +195,7 @@
   startConstellation('constellation', { density: 0.6 });
   document.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowRight' || e.key === ' ') location.href = '03-summit.html';
-    if (e.key === 'ArrowLeft') location.href = '01-what.html';
+    if (e.key === 'ArrowLeft') location.href = '01b-report.html';
   });
 </script>
 
