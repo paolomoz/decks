@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>03 · Summit · Digital Insights</title>
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+  body { background: linear-gradient(180deg, #050817 0%, #0a1230 55%, #1a0e3a 100%); }
+
+  .summit-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 1.4rem; margin-top: 1.4rem;
+    flex: 1; min-height: 0; align-items: stretch;
+  }
+  .summit-stat {
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: flex-start;
+    padding: 1.4rem 1.6rem;
+    border-left: 3px solid var(--cyan);
+    background: rgba(95, 212, 255, 0.05);
+    border-radius: 0 8px 8px 0;
+  }
+  .summit-stat.violet { border-left-color: var(--violet); background: rgba(192, 132, 252, 0.05); }
+  .summit-stat.bright { border-left-color: var(--cyan-bright); background: rgba(170, 233, 255, 0.05); }
+  .summit-stat.gold { border-left-color: #ffe18a; background: rgba(255, 225, 138, 0.05); }
+  .summit-num {
+    font-family: 'Inter', sans-serif;
+    font-weight: 200; font-size: clamp(5rem, 9vw, 8rem);
+    line-height: 0.92; letter-spacing: -0.06em;
+    color: var(--cyan);
+  }
+  .summit-stat.violet .summit-num { color: var(--violet); }
+  .summit-stat.bright .summit-num { color: var(--cyan-bright); }
+  .summit-stat.gold  .summit-num { color: #ffe18a; }
+  .summit-num .pct  { font-size: 0.45em; vertical-align: 0.45em; font-weight: 400; margin-left: 0.05em; }
+  .summit-num .plus { font-size: 0.6em;  vertical-align: 0.2em;  font-weight: 400; margin-left: 0.05em; }
+  .summit-lbl {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(1.1rem, 1.4vw, 1.35rem);
+    font-weight: 600; color: var(--dust);
+    margin-top: 0.5rem;
+  }
+  .summit-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(0.95rem, 1.15vw, 1.1rem);
+    color: var(--dust-faint); margin-top: 0.3rem;
+    line-height: 1.4;
+  }
+  .summit-foot {
+    margin-top: 1.8rem;
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(1.5rem, 2.2vw, 2rem);
+    color: var(--dust-dim);
+  }
+  .summit-foot strong {
+    color: var(--cyan); font-weight: 700; font-style: normal;
+    font-family: 'Inter', sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<canvas class="bg-canvas" id="constellation"></canvas>
+
+<nav class="topnav">
+  <div class="logo">
+    <span class="a">Adobe</span>
+    <span class="sep">/</span>
+    <span>Digital Insights</span>
+  </div>
+  <div class="slide-counter">SLIDE · 3 / 5</div>
+  <div class="topnav-actions">
+    <a class="nav-link" href="02-signals.html">← Prev</a>
+    <a class="nav-link" href="04-demand.html">Next →</a>
+  </div>
+</nav>
+
+<aside class="side-dots">
+  <a href="index.html" data-label="Cover"></a>
+  <a href="01-what.html" data-label="1. What it is"></a>
+  <a href="02-signals.html" data-label="2. Deal signals"></a>
+  <a href="03-summit.html" class="current" data-label="3. Summit"></a>
+  <a href="04-demand.html" data-label="4. Demand"></a>
+  <a href="05-roadmap.html" data-label="5. Roadmap"></a>
+</aside>
+
+<main>
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow reveal">03 · ADOBE SUMMIT 2026</div>
+      <h1 class="slide-title reveal reveal-1">
+        Customers asked for it<br>
+        <span class="serif">themselves.</span>
+      </h1>
+      <p class="slide-sub reveal reveal-2">
+        A QR code, a coffee bar, no sales rep — and they came.
+      </p>
+
+      <div class="summit-grid">
+        <div class="summit-stat reveal reveal-3">
+          <div class="summit-num">237</div>
+          <div class="summit-lbl">customers scanned</div>
+          <div class="summit-sub">QR code on the floor</div>
+        </div>
+        <div class="summit-stat violet reveal reveal-4">
+          <div class="summit-num">92<span class="pct">%</span></div>
+          <div class="summit-lbl">engaged with their report</div>
+          <div class="summit-sub">opened &amp; explored</div>
+        </div>
+        <div class="summit-stat bright reveal reveal-5">
+          <div class="summit-num">185</div>
+          <div class="summit-lbl">PDFs downloaded</div>
+          <div class="summit-sub">taken back to the team</div>
+        </div>
+        <div class="summit-stat gold reveal reveal-6">
+          <div class="summit-num">$40K<span class="plus">+</span></div>
+          <div class="summit-lbl">spent on the floor</div>
+          <div class="summit-sub">before any sales touch</div>
+        </div>
+      </div>
+
+      <div class="summit-foot reveal reveal-6">
+        <strong>Self-serve insight</strong>, in their hand, before the conversation.
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="slide-foot">
+  <a href="02-signals.html">← Prev</a>
+  <a href="04-demand.html">Next →</a>
+</div>
+
+<script src="assets/effects.js"></script>
+<script>
+  startConstellation('constellation', { density: 0.55 });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') location.href = '04-demand.html';
+    if (e.key === 'ArrowLeft') location.href = '02-signals.html';
+  });
+</script>
+
+</body>
+</html>

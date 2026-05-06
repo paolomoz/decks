@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>01 · What it is · Digital Insights</title>
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+  body { background: linear-gradient(180deg, #060A14 0%, #0a0f24 60%, #120a26 100%); }
+
+  .what-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1.8rem; margin-top: 1rem;
+    flex: 1; min-height: 0; align-items: stretch;
+  }
+  .pillar {
+    background: rgba(6, 10, 20, 0.55);
+    border: 1px solid rgba(95, 212, 255, 0.2);
+    border-radius: 8px;
+    padding: 2.4rem 2rem;
+    display: flex; flex-direction: column;
+    position: relative; overflow: hidden;
+    backdrop-filter: blur(6px);
+  }
+  .pillar::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--cyan), var(--violet));
+  }
+  .pillar.p2::before { background: linear-gradient(90deg, var(--violet), var(--cyan)); }
+  .pillar-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.95rem; color: var(--violet);
+    letter-spacing: 0.22em; margin-bottom: 1.4rem; font-weight: 600;
+  }
+  .pillar-verb {
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: clamp(3.2rem, 5.5vw, 5rem);
+    line-height: 0.95; letter-spacing: -0.04em;
+    margin-bottom: 1.2rem;
+  }
+  .pillar.p1 .pillar-verb { color: var(--cyan); }
+  .pillar.p2 .pillar-verb { color: var(--violet); }
+  .pillar.p3 .pillar-verb {
+    background: linear-gradient(135deg, var(--cyan), var(--violet));
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .pillar-line {
+    font-size: clamp(1.2rem, 1.6vw, 1.5rem);
+    color: var(--dust-dim); line-height: 1.45;
+  }
+
+  .what-strip {
+    margin-top: 1.6rem;
+    padding: 1.1rem 1.6rem;
+    background: rgba(6, 10, 20, 0.55);
+    border: 1px solid rgba(192, 132, 252, 0.22);
+    border-radius: 5px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.05rem; color: var(--dust-dim);
+    letter-spacing: 0.06em; text-align: center;
+  }
+  .what-strip strong { color: var(--cyan); font-weight: 700; }
+  .what-strip .sep { color: var(--violet); margin: 0 0.8rem; }
+</style>
+</head>
+<body>
+
+<canvas class="bg-canvas" id="constellation"></canvas>
+
+<nav class="topnav">
+  <div class="logo">
+    <span class="a">Adobe</span>
+    <span class="sep">/</span>
+    <span>Digital Insights</span>
+  </div>
+  <div class="slide-counter">SLIDE · 1 / 5</div>
+  <div class="topnav-actions">
+    <a class="nav-link" href="index.html">← Cover</a>
+    <a class="nav-link" href="02-signals.html">Next →</a>
+  </div>
+</nav>
+
+<aside class="side-dots">
+  <a href="index.html" data-label="Cover"></a>
+  <a href="01-what.html" class="current" data-label="1. What it is"></a>
+  <a href="02-signals.html" data-label="2. Deal signals"></a>
+  <a href="03-summit.html" data-label="3. Summit"></a>
+  <a href="04-demand.html" data-label="4. Demand"></a>
+  <a href="05-roadmap.html" data-label="5. Roadmap"></a>
+</aside>
+
+<main>
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow reveal">01 · WHAT IT IS</div>
+      <h1 class="slide-title reveal reveal-1">
+        A self-serve <span class="serif">intelligence report</span><br>
+        for any customer conversation.
+      </h1>
+      <p class="slide-sub reveal reveal-2">
+        Sales, BDR, CSM or product specialist asks — within minutes, they get a tailored report.
+      </p>
+
+      <div class="what-grid">
+        <div class="pillar p1 reveal reveal-3">
+          <div class="pillar-num">01</div>
+          <div class="pillar-verb">Scan.</div>
+          <div class="pillar-line">Reads the customer's site, AI footprint, competitive set.</div>
+        </div>
+        <div class="pillar p2 reveal reveal-4">
+          <div class="pillar-num">02</div>
+          <div class="pillar-verb">Synthesize.</div>
+          <div class="pillar-line">AI assembles narrative + recommendations.</div>
+        </div>
+        <div class="pillar p3 reveal reveal-5">
+          <div class="pillar-num">03</div>
+          <div class="pillar-verb">Share.</div>
+          <div class="pillar-line">Branded PDF or web report, ready to use.</div>
+        </div>
+      </div>
+
+      <div class="what-strip reveal reveal-6">
+        <strong>~3,000</strong> reports generated <span class="sep">·</span>
+        <strong>60</strong> active users / 30d <span class="sep">·</span>
+        <strong>3.9</strong> feedback score
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="slide-foot">
+  <a href="index.html">← Cover</a>
+  <a href="02-signals.html">Next →</a>
+</div>
+
+<script src="assets/effects.js"></script>
+<script>
+  startConstellation('constellation', { density: 0.7 });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') location.href = '02-signals.html';
+    if (e.key === 'ArrowLeft') location.href = 'index.html';
+  });
+</script>
+
+</body>
+</html>

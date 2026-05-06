@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>02 · Deal Signals · Digital Insights</title>
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+  body { background: linear-gradient(180deg, #060A14 0%, #0c0e24 55%, #1a0a2c 100%); }
+
+  .hero-row {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 2rem; margin: 0 0 1.4rem; flex-shrink: 0;
+  }
+  .hero-card {
+    padding: 1.6rem 2rem;
+    border: 1px solid rgba(95, 212, 255, 0.28);
+    background: rgba(6, 10, 20, 0.6);
+    border-radius: 8px;
+    position: relative; overflow: hidden;
+    backdrop-filter: blur(6px);
+  }
+  .hero-card.violet { border-color: rgba(192, 132, 252, 0.3); }
+  .hero-card::after {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: var(--cyan);
+  }
+  .hero-card.violet::after { background: var(--violet); }
+  .hero-num {
+    font-family: 'Inter', sans-serif;
+    font-weight: 200; font-size: clamp(7rem, 13vw, 11rem);
+    line-height: 0.9; letter-spacing: -0.06em;
+    color: var(--cyan);
+  }
+  .hero-card.violet .hero-num { color: var(--violet); }
+  .hero-num .pct { font-size: 0.45em; vertical-align: 0.45em; font-weight: 400; margin-left: 0.05em; }
+  .hero-lbl {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(1.3rem, 1.8vw, 1.7rem);
+    font-weight: 600; color: var(--dust);
+    margin-top: 0.2rem;
+  }
+  .hero-lbl .em { color: var(--cyan); }
+  .hero-card.violet .hero-lbl .em { color: var(--violet); }
+  .hero-cap {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(1.1rem, 1.4vw, 1.35rem);
+    color: var(--dust-faint); margin-top: 0.3rem;
+    line-height: 1.35;
+  }
+
+  .cases {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1rem; flex: 1; min-height: 0;
+  }
+  .case {
+    padding: 1.1rem 1.4rem;
+    border-left: 3px solid var(--cyan);
+    background: rgba(95, 212, 255, 0.05);
+    border-radius: 0 6px 6px 0;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .case.violet { border-left-color: var(--violet); background: rgba(192, 132, 252, 0.05); }
+  .case-name {
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: clamp(1.5rem, 2vw, 1.9rem);
+    color: var(--dust); letter-spacing: -0.02em;
+    margin-bottom: 0.3rem;
+  }
+  .case-name .meta {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic; font-weight: 500;
+    font-size: 0.7em; color: var(--dust-faint);
+    margin-left: 0.5rem;
+  }
+  .case-what {
+    font-size: clamp(1.05rem, 1.3vw, 1.25rem);
+    color: var(--dust-dim); line-height: 1.4;
+    margin-bottom: 0.5rem;
+  }
+  .case-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--cyan); font-weight: 600;
+  }
+  .case.violet .case-tag { color: var(--violet); }
+
+  .signals-strip {
+    margin-top: 1rem;
+    padding: 0.85rem 1.2rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(6, 10, 20, 0.55);
+    border-radius: 5px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.95rem; color: var(--dust-dim);
+    letter-spacing: 0.04em; text-align: center;
+  }
+  .signals-strip strong { color: var(--cyan); font-weight: 700; }
+  .signals-strip .sep { color: var(--violet); margin: 0 0.7rem; }
+</style>
+</head>
+<body>
+
+<canvas class="bg-canvas" id="constellation"></canvas>
+
+<nav class="topnav">
+  <div class="logo">
+    <span class="a">Adobe</span>
+    <span class="sep">/</span>
+    <span>Digital Insights</span>
+  </div>
+  <div class="slide-counter">SLIDE · 2 / 5</div>
+  <div class="topnav-actions">
+    <a class="nav-link" href="01-what.html">← Prev</a>
+    <a class="nav-link" href="03-summit.html">Next →</a>
+  </div>
+</nav>
+
+<aside class="side-dots">
+  <a href="index.html" data-label="Cover"></a>
+  <a href="01-what.html" data-label="1. What it is"></a>
+  <a href="02-signals.html" class="current" data-label="2. Deal signals"></a>
+  <a href="03-summit.html" data-label="3. Summit"></a>
+  <a href="04-demand.html" data-label="4. Demand"></a>
+  <a href="05-roadmap.html" data-label="5. Roadmap"></a>
+</aside>
+
+<main>
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow reveal">02 · IT MOVES DEALS</div>
+      <h1 class="slide-title reveal reveal-1">
+        DI doesn't just inform —<br>
+        <span class="serif">it unsticks.</span>
+      </h1>
+
+      <div class="hero-row">
+        <div class="hero-card reveal reveal-2">
+          <div class="hero-num">40<span class="pct">%</span></div>
+          <div class="hero-lbl">of reports show signals of <span class="em">pipeline growth</span></div>
+          <div class="hero-cap">New opps · expansion wedges · displacement openings</div>
+        </div>
+        <div class="hero-card violet reveal reveal-3">
+          <div class="hero-num">30<span class="pct">%</span></div>
+          <div class="hero-lbl">of reports show signals of <span class="em">deal progression</span></div>
+          <div class="hero-cap">Stage advance · ROI unlock · executive sign-off</div>
+        </div>
+      </div>
+
+      <div class="cases">
+        <div class="case reveal reveal-4">
+          <div class="case-name">Seagate <span class="meta">· transformational deal</span></div>
+          <div class="case-what">CWV-to-revenue ROI framing for executive sign-off.</div>
+          <div class="case-tag">Deal progression</div>
+        </div>
+        <div class="case violet reveal reveal-4">
+          <div class="case-name">DDI <span class="meta">· custom CMS</span></div>
+          <div class="case-what">SEO + performance gap data vs. low-cost CMS.</div>
+          <div class="case-tag">Pipeline growth</div>
+        </div>
+        <div class="case reveal reveal-5">
+          <div class="case-name">AMS Customer <span class="meta">· $1.3M renewal</span></div>
+          <div class="case-what">EDS migration as trust reset after burned legacy AEM impl.</div>
+          <div class="case-tag">Deal progression</div>
+        </div>
+        <div class="case violet reveal reveal-5">
+          <div class="case-name">Pokemon <span class="meta">· Workfront-only</span></div>
+          <div class="case-what">LLM Optimizer as new wedge to restart AEM conversation.</div>
+          <div class="case-tag">Pipeline growth</div>
+        </div>
+      </div>
+
+      <div class="signals-strip reveal reveal-6">
+        <strong>82</strong> legacy AEM migration asks <span class="sep">·</span>
+        <strong>20</strong> active Sitecore displacements <span class="sep">·</span>
+        <strong>239</strong> conversion deals
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="slide-foot">
+  <a href="01-what.html">← Prev</a>
+  <a href="03-summit.html">Next →</a>
+</div>
+
+<script src="assets/effects.js"></script>
+<script>
+  startConstellation('constellation', { density: 0.6 });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') location.href = '03-summit.html';
+    if (e.key === 'ArrowLeft') location.href = '01-what.html';
+  });
+</script>
+
+</body>
+</html>
