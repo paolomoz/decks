@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>06 · Funnel · Digital Insights</title>
+<link rel="stylesheet" href="assets/styles.css">
+<style>
+  body { background: linear-gradient(180deg, #060A14 0%, #0a0f24 55%, #160c2c 100%); }
+
+  .slide-title { font-size: clamp(2.6rem, 5vw, 4.2rem); margin-bottom: 0.5rem; }
+  .slide-sub { font-size: clamp(1.05rem, 1.4vw, 1.35rem); margin-bottom: 0.6rem; }
+
+  /* ── funnel ────────────────────────────── */
+  .funnel {
+    flex: 1; min-height: 0;
+    display: flex; flex-direction: column;
+    justify-content: space-between;
+    margin-top: 0.8rem;
+    align-items: stretch;
+  }
+  .funnel-row {
+    display: grid;
+    grid-template-columns: 170px minmax(0, 1.05fr) minmax(0, 1.6fr);
+    gap: 1.4rem; align-items: center;
+    padding: 1rem 1.5rem;
+    border-radius: 0 10px 10px 0;
+    border-left: 5px solid var(--cyan);
+    background: rgba(95, 212, 255, 0.06);
+    backdrop-filter: blur(4px);
+    align-self: center;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+  .funnel-row::after {
+    content: ''; position: absolute; top: 0; bottom: 0;
+    right: 0; width: 4px;
+    background: linear-gradient(180deg, transparent, currentColor, transparent);
+    opacity: 0.3;
+  }
+
+  /* funnel narrowing (visual flow) */
+  .funnel-row.r1 { width: 100%; }
+  .funnel-row.r2 { width: 92%; }
+  .funnel-row.r3 { width: 84%; }
+  .funnel-row.r4 { width: 76%; }
+  .funnel-row.r5 { width: 68%; }
+  .funnel-row.r6 { width: 60%; }
+
+  /* color lerp cyan→violet across the 6 rows */
+  .funnel-row.r1 { border-left-color: #5fd4ff; background: rgba(95, 212, 255, 0.09);  color: #5fd4ff; }
+  .funnel-row.r2 { border-left-color: #82c4fb; background: rgba(130, 196, 251, 0.08); color: #82c4fb; }
+  .funnel-row.r3 { border-left-color: #a3b3f5; background: rgba(163, 179, 245, 0.08); color: #a3b3f5; }
+  .funnel-row.r4 { border-left-color: #b69eee; background: rgba(182, 158, 238, 0.08); color: #b69eee; }
+  .funnel-row.r5 { border-left-color: #c190ed; background: rgba(193, 144, 237, 0.09); color: #c190ed; }
+  .funnel-row.r6 { border-left-color: #c084fc; background: rgba(192, 132, 252, 0.11); color: #c084fc; }
+
+  .f-stage {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.95rem; font-weight: 700;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: currentColor;
+  }
+  .f-stage .step {
+    display: block;
+    font-size: 0.7em; font-weight: 500;
+    color: var(--dust-faint);
+    letter-spacing: 0.18em;
+    margin-bottom: 0.18rem;
+  }
+  .f-metric {
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: clamp(1.35rem, 2.1vw, 2rem);
+    color: var(--dust);
+    letter-spacing: -0.02em; line-height: 1.1;
+  }
+  .f-metric .unit {
+    font-weight: 400;
+    font-size: 0.55em;
+    color: var(--dust-faint);
+    margin-left: 0.15em;
+    letter-spacing: 0;
+  }
+  .f-metric .sep { color: var(--dust-faint); font-weight: 300; margin: 0 0.3em; }
+  .f-cap {
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: clamp(1rem, 1.3vw, 1.25rem);
+    color: var(--dust);
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+  }
+  .f-cap .hi-a { color: var(--cyan); font-weight: 700; }
+  .f-cap .hi-b { color: var(--violet); font-weight: 700; }
+  .f-cap .dot { color: var(--dust-faint); margin: 0 0.35em; }
+
+  /* revenue row gets the big breakdown treatment */
+  .f-breakdown {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.05rem, 1.4vw, 1.3rem);
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+  }
+  .f-breakdown .pct { font-weight: 800; }
+  .f-breakdown .a { color: var(--cyan); }
+  .f-breakdown .b { color: var(--violet); }
+  .f-breakdown .lbl { color: var(--dust); font-weight: 500; }
+  .f-breakdown .dot { color: var(--dust-faint); margin: 0 0.4em; }
+
+  /* big AAARRR mark behind — subtler so foreground reads */
+  .funnel-mark {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Inter', sans-serif;
+    font-weight: 900; font-style: normal;
+    font-size: clamp(13rem, 26vw, 30rem);
+    line-height: 1; letter-spacing: -0.06em;
+    background: linear-gradient(135deg, var(--cyan), var(--violet));
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    opacity: 0.07;
+    pointer-events: none; user-select: none;
+    z-index: 0;
+    animation: aaarrrPulse 8s ease-in-out infinite;
+    white-space: nowrap;
+  }
+  @keyframes aaarrrPulse {
+    0%, 100% { opacity: 0.06; }
+    50%      { opacity: 0.10; }
+  }
+  .slide-inner { position: relative; z-index: 1; }
+
+  @media (max-width: 980px) {
+    .funnel-row { grid-template-columns: 1fr; gap: 0.4rem; padding: 0.7rem 1rem; }
+    .funnel-row.r1, .funnel-row.r2, .funnel-row.r3,
+    .funnel-row.r4, .funnel-row.r5, .funnel-row.r6 { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<canvas class="bg-canvas" id="constellation"></canvas>
+
+<nav class="topnav">
+  <div class="logo">
+    <span class="a">Adobe</span>
+    <span class="sep">/</span>
+    <span>Digital Insights</span>
+  </div>
+  <div class="slide-counter">SLIDE · 6 / 7</div>
+  <div class="topnav-actions">
+    <a class="nav-link" href="03-summit.html">← Prev</a>
+    <a class="nav-link" href="05-roadmap.html">Next →</a>
+  </div>
+</nav>
+
+<aside class="side-dots">
+  <a href="index.html" data-label="Cover"></a>
+  <a href="01-what.html" data-label="1. What it is"></a>
+  <a href="01b-report.html" data-label="2. The report"></a>
+  <a href="04-demand.html" data-label="3. Adoption"></a>
+  <a href="02-signals.html" data-label="4. Deal signals"></a>
+  <a href="03-summit.html" data-label="5. Summit"></a>
+  <a href="06-funnel.html" class="current" data-label="6. Funnel"></a>
+  <a href="05-roadmap.html" data-label="7. Roadmap"></a>
+</aside>
+
+<main>
+  <section class="slide">
+    <div class="funnel-mark">AAARRR</div>
+    <div class="slide-inner">
+      <div class="eyebrow reveal">06 · FULL-FUNNEL SIGNAL · AAARRR</div>
+      <h1 class="slide-title reveal reveal-1">
+        From awareness to <span class="serif">revenue —</span><br>
+        in Digital Insights' own data.
+      </h1>
+
+      <div class="funnel">
+        <div class="funnel-row r1 reveal reveal-2">
+          <div class="f-stage"><span class="step">A1</span>Awareness</div>
+          <div class="f-metric">237<span class="unit">scans</span><span class="sep">·</span>4<span class="unit">regions</span></div>
+          <div class="f-cap"><span class="hi-a">Summit booth</span> + global footprint <span class="dot">·</span> US · EMEA · JAPAC · UAE</div>
+        </div>
+        <div class="funnel-row r2 reveal reveal-2">
+          <div class="f-stage"><span class="step">A2</span>Acquisition</div>
+          <div class="f-metric">~3,000<span class="unit">reports</span></div>
+          <div class="f-cap"><span class="hi-a">First reports</span> generated <span class="dot">·</span> 12-month cumulative</div>
+        </div>
+        <div class="funnel-row r3 reveal reveal-3">
+          <div class="f-stage"><span class="step">A3</span>Activation</div>
+          <div class="f-metric">92%<span class="unit">engaged</span><span class="sep">·</span>3.9<span class="unit">CSAT</span></div>
+          <div class="f-cap">Opened, explored, found value <span class="dot">·</span> <span class="hi-b">Summit cohort</span></div>
+        </div>
+        <div class="funnel-row r4 reveal reveal-3">
+          <div class="f-stage"><span class="step">R1</span>Retention</div>
+          <div class="f-metric">60<span class="unit">active / 30d</span></div>
+          <div class="f-cap"><span class="hi-a">BDRs</span> <span class="dot">·</span> <span class="hi-b">CSMEs</span> <span class="dot">·</span> <span class="hi-a">product specialists</span> — returning</div>
+        </div>
+        <div class="funnel-row r5 reveal reveal-4">
+          <div class="f-stage"><span class="step">R2</span>Referral</div>
+          <div class="f-metric">~1,600<span class="unit">reuses</span></div>
+          <div class="f-cap">BDRs reusing Summit reports <span class="dot">·</span> <span class="hi-b">USA + AU</span> outreach</div>
+        </div>
+        <div class="funnel-row r6 reveal reveal-4">
+          <div class="f-stage"><span class="step">R3</span>Revenue</div>
+          <div class="f-metric">73%<span class="unit">deal-signal</span></div>
+          <div class="f-breakdown">
+            <span class="pct a">41%</span> <span class="lbl">pipeline growth</span>
+            <span class="dot">·</span>
+            <span class="pct b">32%</span> <span class="lbl">deal progression</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="slide-foot">
+  <a href="03-summit.html">← Prev</a>
+  <a href="05-roadmap.html">Next →</a>
+</div>
+
+<script src="assets/effects.js"></script>
+<script>
+  startConstellation('constellation', { density: 0.55 });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') location.href = '05-roadmap.html';
+    if (e.key === 'ArrowLeft') location.href = '03-summit.html';
+  });
+</script>
+
+</body>
+</html>
